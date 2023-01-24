@@ -22,6 +22,7 @@ function App() {
   return (
     <QrCodeSvg
       frame={200}
+      value="html"
       content={
         <View>
           <Text>Hello</Text>
