@@ -11,11 +11,20 @@ npm install react-native-qrcode-svg
 ## Usage
 
 ```js
-import { multiply } from 'react-native-qrcode-svg';
+import { QrCodeSvg } from 'react-native-qrcode-svg';
 
-// ...
-
-const result = await multiply(3, 7);
+function App() {
+  return (
+    <QrCodeSvg
+      frame={200}
+      content={
+        <View>
+          <Text>Hello</Text>
+        </View>
+      }
+    />
+  );
+}
 ```
 
 ## Contributing
