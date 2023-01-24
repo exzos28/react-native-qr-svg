@@ -52,7 +52,8 @@
     "access": "public"
   },
   "dependencies": {
-    "qrcode": "^1.5.1"
+    "qrcode": "^1.5.1",
+    "react-native-svg": "^13.7.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -83,7 +84,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-svg": "^13.7.0"
+    "react-native-svg": "*"
   },
   "engines": {
     "node": ">= 16.0.0"
