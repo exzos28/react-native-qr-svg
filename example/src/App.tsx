@@ -7,6 +7,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <QrCodeSvg
+        value="Hello world!"
         frame={200}
         content={
           <View>

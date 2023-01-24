@@ -5,6 +5,7 @@ import { StyleProp, View, ViewStyle } from 'react-native';
 import type { QRCodeErrorCorrectionLevel } from 'qrcode';
 
 export type QrCodeSvgProps = {
+  value: string;
   frame: number;
   imageSize?: number;
   errorCorrectionLevel?: QRCodeErrorCorrectionLevel;
@@ -17,6 +18,7 @@ export type QrCodeSvgProps = {
 };
 
 export function QrCodeSvg({
+  value,
   frame,
   imageSize = 5,
   errorCorrectionLevel = 'M',
@@ -27,7 +29,7 @@ export function QrCodeSvg({
   content,
   contentStyle,
 }: QrCodeSvgProps) {
-  const matrix = createMatrix('html', errorCorrectionLevel);
+  const matrix = createMatrix(value, errorCorrectionLevel);
   const size = frame / matrix.length;
   const image = size * imageSize;
   const contentWidth = image;
