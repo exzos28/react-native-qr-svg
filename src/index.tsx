@@ -1,9 +1,8 @@
 import React from 'react';
 import { createMatrix } from './createMatrix';
-import Svg, { Path, G, Rect } from 'react-native-svg';
+import Svg, { Path, G, Rect, RectProps } from 'react-native-svg';
 import { StyleProp, View, ViewStyle } from 'react-native';
 import type { QRCodeErrorCorrectionLevel } from 'qrcode';
-import type { RectProps } from 'react-native-svg/src/elements/Rect';
 
 export type QrCodeSvgProps = {
   frame: number;
