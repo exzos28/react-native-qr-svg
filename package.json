@@ -1,5 +1,5 @@
 {
-  "name": "react-native-qrcode-svg",
+  "name": "@exzos28/react-native-qrcode-svg",
   "version": "0.1.0",
   "description": "test",
   "main": "lib/commonjs/index",
@@ -48,7 +48,8 @@
   },
   "homepage": "https://github.com/exzos28/react-native-qrcode-svg#readme",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "dependencies": {
     "qrcode": "^1.5.1"
