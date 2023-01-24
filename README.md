@@ -1,17 +1,17 @@
-# react-native-qrcode-svg
+# @exzos28/react-native-qrcode-svg
 
 A QR Code generator for React Native based on react-native-svg, to create QR codes like in Telegram
 
 ## Installation
 
 ```sh
-npm install react-native-qrcode-svg
+npm install @exzos28/react-native-qrcode-svg
 ```
 
 ## Usage
 
 ```js
-import { QrCodeSvg } from 'react-native-qrcode-svg';
+import { QrCodeSvg } from '@exzos28/react-native-qrcode-svg';
 
 function App() {
   return (
