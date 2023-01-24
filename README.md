@@ -8,6 +8,11 @@ A QR Code generator for React Native based on react-native-svg, to create QR cod
 npm install @exzos28/react-native-qrcode-svg
 ```
 
+## Example
+
+<img src="screenshot/light.png" width="250" alt='light theme'>
+<img src="screenshot/dark.png" width="250" alt='dark theme'>
+
 ## Usage
 
 ```js
