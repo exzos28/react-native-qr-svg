@@ -1,6 +1,6 @@
 {
   "name": "@exzos28/react-native-qrcode-svg",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "test",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
