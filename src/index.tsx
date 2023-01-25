@@ -60,7 +60,7 @@ export function QrCodeSvg({
   const contentY = frameSize / 2 - contentSize / 2;
 
   const renderFigure = useCallback(
-    (x: number, y: number, neighbors: Neighbors, key: string) => {
+    (x: number, y: number, neighbors: Neighbors) => {
       const { q1, q2, q3, q4 } = getCorners(x, y, matrixCellSize);
       if (
         !(
@@ -119,7 +119,7 @@ export function QrCodeSvg({
           : `Q${q4.x} ${q4.y} ${d1.x} ${d1.y}`;
       const d = `M${d1.x} ${d1.y} ${d1d2} ${d2d3} ${d3d4} ${d4d1}`;
 
-      return <Path key={key} d={d} fill={dotColor} {...figurePathProps} />;
+      return <Path d={d} fill={dotColor} {...figurePathProps} />;
     },
     [dotColor, figureCircleProps, figurePathProps, matrixCellSize]
   );
@@ -141,7 +141,11 @@ export function QrCodeSvg({
               const x = j * matrixCellSize;
               const y = i * matrixCellSize;
               const key = `${i}${j}`;
-              return renderFigure(x, y, neighbors, key);
+              return (
+                <React.Fragment key={key}>
+                  {renderFigure(x, y, neighbors)}
+                </React.Fragment>
+              );
             })
           )}
         </G>
