@@ -37,21 +37,35 @@ export function QrCodeSvg({
   figureCircleProps,
   figurePathProps,
 }: QrCodeSvgProps) {
-  const matrix = useMemo(
+  const originalMatrix = useMemo(
     () => createMatrix(value, errorCorrectionLevel),
     [errorCorrectionLevel, value]
   );
-  const matrixCellSize = Math.round((frameSize / matrix.length) * 100) / 100; // Ex. 3.141592653589793 -> 3.14
-  const matrixRowLength = matrix[0]?.length ?? 0;
+  const matrixCellSize = round((frameSize / originalMatrix.length) * 100) / 100; // Ex. 3.141592653589793 -> 3.14
+  const matrixRowLength = originalMatrix[0]?.length ?? 0;
   const roundedContentCells =
     (matrixRowLength - contentCells) % 2 === 0
       ? contentCells
       : contentCells + 1;
   const contentSize = matrixCellSize * roundedContentCells;
-  const contentWidth = contentSize;
-  const contentHeight = contentSize;
-  const contentX = frameSize / 2 - contentSize / 2;
-  const contentY = frameSize / 2 - contentSize / 2;
+  const contentStartIndex = (matrixRowLength - roundedContentCells) / 2;
+  const contentEndIndex = contentStartIndex + roundedContentCells - 1;
+  const contentXY = contentStartIndex * matrixCellSize;
+
+  const matrix = useMemo(
+    () =>
+      originalMatrix.map((row, i) =>
+        row.map((el, j) =>
+          i >= contentStartIndex &&
+          i <= contentEndIndex &&
+          j >= contentStartIndex &&
+          j <= contentEndIndex
+            ? 0
+            : el
+        )
+      ),
+    [contentEndIndex, contentStartIndex, originalMatrix]
+  );
 
   const renderFigure = useCallback(
     (x: number, y: number, neighbors: Neighbors) => {
@@ -146,11 +160,11 @@ export function QrCodeSvg({
         {content && (
           <Rect
             fill={backgroundColor}
-            x={contentX}
-            y={contentY}
+            x={contentXY}
+            y={contentXY}
             {...contentBackgroundRectProps}
-            width={contentWidth}
-            height={contentHeight}
+            width={contentSize}
+            height={contentSize}
           />
         )}
       </Svg>
@@ -158,10 +172,10 @@ export function QrCodeSvg({
         <View
           style={[
             {
-              width: contentWidth,
-              height: contentHeight,
-              top: contentY,
-              left: contentX,
+              width: contentSize,
+              height: contentSize,
+              top: contentXY,
+              left: contentXY,
             },
             styles.content,
             contentStyle,
@@ -173,6 +187,8 @@ export function QrCodeSvg({
     </View>
   );
 }
+
+const round = (number: number) => Math.round(number * 100) / 100;
 
 const styles = StyleSheet.create({
   content: {
