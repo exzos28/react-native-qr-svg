@@ -73,22 +73,6 @@ export function QrCodeSvg({
                 },
               };
 
-              if (i === 0 && j === 10) {
-                console.log({
-                  top: matrix[j - 1]?.[i],
-                  bottom: matrix[j + 1]?.[i],
-                  left: matrix[j]?.[i - 1],
-                  right: matrix[j]?.[i + 1],
-                });
-                console.log(
-                  getBezierCurve({
-                    type: dotType,
-                    radius: dotRadius as number,
-                    ...baseProps,
-                  })
-                );
-              }
-
               if (dotType === 'rounded') {
                 return (
                   <Path
