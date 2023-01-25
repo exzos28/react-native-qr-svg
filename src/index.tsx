@@ -1,15 +1,9 @@
 import React, { useCallback, useMemo } from 'react';
 import { createMatrix } from './createMatrix';
-import Svg, {
-  Path,
-  G,
-  Rect,
-  RectProps,
-  Circle,
-  PathProps,
-  CircleProps,
-} from 'react-native-svg';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import Svg, { Path, G, Rect, Circle } from 'react-native-svg';
+import type { RectProps, PathProps, CircleProps } from 'react-native-svg';
+import { StyleSheet, View } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import type { QRCodeErrorCorrectionLevel } from 'qrcode';
 import type { Neighbors } from './types';
 import getCorners from './getCornets';
