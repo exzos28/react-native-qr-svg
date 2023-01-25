@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { QrCodeSvg } from '@exzos28/react-native-qrcode-svg';
+import { QrCodeSvg, GradientQrCodeSvg } from '@exzos28/react-native-qrcode-svg';
 
 export default function App() {
   return (
@@ -20,17 +20,18 @@ export default function App() {
         />
       </View>
       <View style={styles.secondQr}>
-        <QrCodeSvg
+        <GradientQrCodeSvg
           value="Hello world!"
           frameSize={200}
+          gradientColors={['rgb(50,101,50)', 'rgb(26,60,152)', 'red']}
           contentCells={5}
           content={
             <View>
               <Text>💻</Text>
             </View>
           }
-          dotColor="#ffffff"
-          backgroundColor="#000000"
+          //dotColor="#ffffff"
+          backgroundColor="#ffffff"
           contentStyle={styles.box}
         />
       </View>
@@ -41,7 +42,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -54,6 +55,6 @@ const styles = StyleSheet.create({
   },
   secondQr: {
     padding: 15,
-    backgroundColor: '#000000',
+    //backgroundColor: '#000000',
   },
 });
