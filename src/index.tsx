@@ -3,6 +3,8 @@ import { createMatrix } from './createMatrix';
 import Svg, { Path, G, Rect, RectProps } from 'react-native-svg';
 import { StyleProp, View, ViewStyle } from 'react-native';
 import type { QRCodeErrorCorrectionLevel } from 'qrcode';
+import { getBezierCurve } from './getBezierCurve';
+import { getDotType } from './getDotType';
 
 export type QrCodeSvgProps = {
   value: string;
@@ -15,6 +17,8 @@ export type QrCodeSvgProps = {
   rectProps?: RectProps;
   content?: React.ReactNode;
   contentStyle?: StyleProp<ViewStyle>;
+
+  dotRadius?: 'circle' | number;
 };
 
 export function QrCodeSvg({
@@ -27,6 +31,7 @@ export function QrCodeSvg({
   style,
   rectProps,
   content,
+  dotRadius,
   contentStyle,
 }: QrCodeSvgProps) {
   const matrix = createMatrix(value, errorCorrectionLevel);
@@ -36,6 +41,7 @@ export function QrCodeSvg({
   const contentHeight = image;
   const contentX = frame / 2 - image / 2;
   const contentY = frame / 2 - image / 2;
+
   return (
     <View style={[{ backgroundColor }, style]}>
       <Svg width={frame} height={frame}>
@@ -49,48 +55,64 @@ export function QrCodeSvg({
               // const left = row[j - i];
               // const right = row[j + 1];
               // const bottom = matrix[i + 1]?.[j];
-              const x = i * size;
-              const y = j * size;
-              // q4  0  d1  0  q1
-              // 0   0  0   0  0
-              // d4  0  0   0  d2
-              // 0   0  0   0  0
-              // q3  0  d3  0  q2
-              const q1 = {
-                x: x + size,
-                y: y,
-              };
-              const q2 = {
-                x: x + size,
-                y: y + size,
-              };
-              const q3 = {
-                x: x,
-                y: y + size,
-              };
-              const q4 = {
-                x: x,
-                y: y,
-              };
-              const d1 = {
-                x: x + size / 2,
-                y: y,
-              };
-              const d2 = {
-                x: x + size,
-                y: y + size / 2,
-              };
-              const d3 = {
-                x: x + size / 2,
-                y: y + size,
-              };
-              const d4 = {
-                x: x,
-                y: y + size / 2,
-              };
-              const d = `M${d1.x} ${d1.y} Q${q1.x} ${q1.y} ${d2.x} ${d2.y} Q${q2.x} ${q2.y} ${d3.x} ${d3.y} Q${q3.x} ${q3.y} ${d4.x} ${d4.y} Q${q4.x} ${q4.y} ${d1.x} ${d1.y}`;
+              const x = j * size;
+              const y = i * size;
+
               const key = `${i}${j}`;
-              return <Path key={key} d={d} fill={dotColor} />;
+              const dotType = getDotType(dotRadius);
+
+              const baseProps = {
+                x,
+                y,
+                size,
+                neighbors: {
+                  top: Boolean(matrix[i - 1]?.[j]),
+                  bottom: Boolean(matrix[i + 1]?.[j]),
+                  left: Boolean(row[j - 1]),
+                  right: Boolean(row[j + 1]),
+                },
+              };
+
+              if (i === 0 && j === 10) {
+                console.log({
+                  top: matrix[j - 1]?.[i],
+                  bottom: matrix[j + 1]?.[i],
+                  left: matrix[j]?.[i - 1],
+                  right: matrix[j]?.[i + 1],
+                });
+                console.log(
+                  getBezierCurve({
+                    type: dotType,
+                    radius: dotRadius as number,
+                    ...baseProps,
+                  })
+                );
+              }
+
+              if (dotType === 'rounded') {
+                return (
+                  <Path
+                    key={key}
+                    d={getBezierCurve({
+                      type: dotType,
+                      radius: dotRadius as number,
+                      ...baseProps,
+                    })}
+                    fill={dotColor}
+                  />
+                );
+              }
+
+              return (
+                <Path
+                  key={key}
+                  d={getBezierCurve({
+                    type: dotType,
+                    ...baseProps,
+                  })}
+                  fill={dotColor}
+                />
+              );
             })
           )}
         </G>

@@ -9,6 +9,7 @@ export default function App() {
       <QrCodeSvg
         value="Hello world!"
         frame={200}
+        dotRadius={10}
         content={
           <View>
             <Text>Hello</Text>
