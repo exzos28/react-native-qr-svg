@@ -10,8 +10,7 @@ npm install @exzos28/react-native-qrcode-svg
 
 ## Example
 
-<img src="screenshot/light.png" width="250" alt='light theme'>
-<img src="screenshot/dark.png" width="250" alt='dark theme'>
+<img src="screenshot/example1.png" width="1027" alt='example'>
 
 ## Usage
 
