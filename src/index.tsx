@@ -54,17 +54,19 @@ export function QrCodeSvg({
 
   const matrix = useMemo(
     () =>
-      originalMatrix.map((row, i) =>
-        row.map((el, j) =>
-          i >= contentStartIndex &&
-          i <= contentEndIndex &&
-          j >= contentStartIndex &&
-          j <= contentEndIndex
-            ? 0
-            : el
-        )
-      ),
-    [contentEndIndex, contentStartIndex, originalMatrix]
+      content !== undefined
+        ? originalMatrix.map((row, i) =>
+            row.map((el, j) =>
+              i >= contentStartIndex &&
+              i <= contentEndIndex &&
+              j >= contentStartIndex &&
+              j <= contentEndIndex
+                ? 0
+                : el
+            )
+          )
+        : originalMatrix,
+    [content, contentEndIndex, contentStartIndex, originalMatrix]
   );
 
   const renderFigure = useCallback(
