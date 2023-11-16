@@ -40,13 +40,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/react-native-qr-svg",
+  "repository": "https://github.com/exzos28/react-native-qr-svg",
   "author": "exzos28 <oleksandr.kurinnyi.dev@gmail.com> (https://github.com/exzos28)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/react-native-qr-svg/issues"
+    "url": "https://github.com/exzos28/react-native-qr-svg/issues"
   },
-  "homepage": "https://github.com/react-native-qr-svg#readme",
+  "homepage": "https://github.com/exzos28/react-native-qr-svg#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
