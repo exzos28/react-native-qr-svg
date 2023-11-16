@@ -1,6 +1,6 @@
 {
   "name": "react-native-qr-svg",
-  "version": "0.3.5",
+  "version": "1.0.0",
   "description": "Awesome library 🙂",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
