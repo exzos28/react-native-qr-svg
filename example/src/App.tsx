@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { QrCodeSvg } from '@exzos28/react-native-qrcode-svg';
+import { QrCodeSvg } from 'react-native-qr-svg';
 
 export default function App() {
   return (

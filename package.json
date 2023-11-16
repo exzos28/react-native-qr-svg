@@ -1,5 +1,5 @@
 {
-  "name": "@exzos28/react-native-qrcode-svg",
+  "name": "react-native-qr-svg",
   "version": "0.3.5",
   "description": "Awesome library 🙂",
   "main": "lib/commonjs/index",
@@ -40,13 +40,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/exzos28/react-native-qrcode-svg",
+  "repository": "https://github.com/react-native-qr-svg",
   "author": "exzos28 <oleksandr.kurinnyi.dev@gmail.com> (https://github.com/exzos28)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/exzos28/react-native-qrcode-svg/issues"
+    "url": "https://github.com/react-native-qr-svg/issues"
   },
-  "homepage": "https://github.com/exzos28/react-native-qrcode-svg#readme",
+  "homepage": "https://github.com/react-native-qr-svg#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@exzos28/react-native-qrcode-svg": ["./src/index"]
+      "react-native-qr-svg": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
