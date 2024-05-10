@@ -6,33 +6,36 @@ import { QrCodeSvg } from 'react-native-qr-svg';
 export default function App() {
   return (
     <View style={styles.container}>
-      <View style={styles.firstQr}>
+      <View style={[styles.qr, styles.firstQr]}>
         <QrCodeSvg
           value="Hello world!"
           frameSize={200}
           contentCells={5}
           content={
             <View>
-              <Text>👋</Text>
+              <Text style={styles.icon}>👋</Text>
             </View>
           }
           contentStyle={styles.box}
         />
       </View>
-      <View style={styles.secondQr}>
+      <View style={[styles.qr, styles.secondQr]}>
         <QrCodeSvg
           value="Hello world!"
           frameSize={200}
           contentCells={5}
           content={
             <View>
-              <Text>💻</Text>
+              <Text style={styles.icon}>💻</Text>
             </View>
           }
           dotColor="#ffffff"
           backgroundColor="#000000"
           contentStyle={styles.box}
         />
+      </View>
+      <View style={styles.qr}>
+        <QrCodeSvg value="Hello world!" padding={0.5} frameSize={200} />
       </View>
     </View>
   );
@@ -41,7 +44,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -49,11 +51,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  firstQr: {
-    marginRight: 15,
+  icon: {
+    fontSize: 20,
   },
-  secondQr: {
+  qr: {
     padding: 15,
+  },
+  firstQr: {},
+  secondQr: {
     backgroundColor: '#000000',
   },
 });
