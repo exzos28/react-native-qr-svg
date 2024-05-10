@@ -29,46 +29,71 @@ import React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
 import { QrCodeSvg } from 'react-native-qr-svg';
+import { plainRenderer } from '../../src/renderers';
+
+const SIZE = 170;
+const CONTENT = 'Hello world!';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <View style={styles.firstQr}>
-        <QrCodeSvg
-          value="Hello world!"
-          frameSize={200}
-          contentCells={5}
-          content={
-            <View>
-              <Text>👋</Text>
-            </View>
-          }
-          contentStyle={styles.box}
-        />
-      </View>
-      <View style={styles.secondQr}>
-        <QrCodeSvg
-          value="Hello world!"
-          frameSize={200}
-          contentCells={5}
-          content={
-            <View>
-              <Text>💻</Text>
-            </View>
-          }
-          dotColor="#ffffff"
-          backgroundColor="#000000"
-          contentStyle={styles.box}
-        />
+    <View style={styles.root}>
+      <View style={styles.content}>
+        <View style={styles.qr}>
+          <QrCodeSvg
+            value={CONTENT}
+            frameSize={SIZE}
+            contentCells={5}
+            content={
+              <View>
+                <Text style={styles.icon}>👋</Text>
+              </View>
+            }
+            contentStyle={styles.box}
+          />
+        </View>
+        <View style={styles.qr}>
+          <QrCodeSvg
+            gradientColors={['#FF0000', '#00FF00']}
+            value={CONTENT}
+            frameSize={SIZE}
+          />
+        </View>
+        <View style={[styles.qr, styles.secondQr]}>
+          <QrCodeSvg
+            value={CONTENT}
+            frameSize={SIZE}
+            contentCells={5}
+            content={
+              <View>
+                <Text style={styles.icon}>💻</Text>
+              </View>
+            }
+            dotColor="#ffffff"
+            backgroundColor="#000000"
+            contentStyle={styles.box}
+          />
+        </View>
+        <View style={styles.qr}>
+          <QrCodeSvg
+            renderer={plainRenderer}
+            value={CONTENT}
+            frameSize={SIZE}
+          />
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  content: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -76,14 +101,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  firstQr: {
-    marginRight: 15,
+  icon: {
+    fontSize: 20,
+  },
+  qr: {
+    padding: 15,
   },
   secondQr: {
-    padding: 15,
     backgroundColor: '#000000',
   },
 });
+
+
 ```
 
 ## Contributing 🤝

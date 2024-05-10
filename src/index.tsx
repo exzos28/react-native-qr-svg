@@ -1,8 +1,16 @@
 import React, { useMemo } from 'react';
 import { createMatrix } from './createMatrix';
-import type { CircleProps, PathProps, RectProps } from 'react-native-svg';
+import {
+  type CircleProps,
+  Defs,
+  LinearGradient,
+  type LinearGradientProps,
+  type PathProps,
+  type RectProps,
+  Stop,
+} from 'react-native-svg';
 import Svg, { G, Path, Rect } from 'react-native-svg';
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { ColorValue, StyleProp, ViewStyle } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import type { QRCodeErrorCorrectionLevel } from 'qrcode';
 import type { Neighbors } from './types';
@@ -23,6 +31,8 @@ export type QrCodeSvgProps = {
   figureCircleProps?: CircleProps;
   figurePathProps?: PathProps;
   renderer?: CustomRenderer;
+  gradientColors?: ColorValue[];
+  gradientProps?: LinearGradientProps;
 };
 
 export function QrCodeSvg({
@@ -39,6 +49,8 @@ export function QrCodeSvg({
   figureCircleProps,
   figurePathProps,
   renderer = defaultRenderer,
+  gradientColors,
+  gradientProps,
 }: QrCodeSvgProps) {
   const originalMatrix = useMemo(
     () => createMatrix(value, errorCorrectionLevel),
@@ -100,24 +112,30 @@ export function QrCodeSvg({
     .filter((_) => _.type === 'circle')
     .map((_) => _.d)
     .join();
+  const qrProps = {
+    frameSize,
+    dPath,
+    dCircle,
+    figurePathProps,
+    figureCircleProps,
+    backgroundColor,
+    contentXY,
+    contentBackgroundRectProps,
+    contentSize,
+    dotColor,
+  };
   return (
     <View style={[{ backgroundColor }, style]}>
-      <Svg width={frameSize} height={frameSize}>
-        <G>
-          <Path d={dPath} fill={dotColor} {...figurePathProps} />
-          <Path d={dCircle} fill={dotColor} {...figureCircleProps} />
-        </G>
-        {content && (
-          <Rect
-            fill={backgroundColor}
-            x={contentXY}
-            y={contentXY}
-            {...contentBackgroundRectProps}
-            width={contentSize}
-            height={contentSize}
-          />
-        )}
-      </Svg>
+      {Array.isArray(gradientColors) ? (
+        <GradientQr
+          {...qrProps}
+          gradientColors={gradientColors}
+          gradientProps={gradientProps}
+        />
+      ) : (
+        <DefaultQr {...qrProps} />
+      )}
+
       {content && (
         <View
           style={[
@@ -137,6 +155,96 @@ export function QrCodeSvg({
     </View>
   );
 }
+
+type InnerQrProps = Pick<
+  QrCodeSvgProps,
+  | 'figurePathProps'
+  | 'figureCircleProps'
+  | 'content'
+  | 'backgroundColor'
+  | 'contentBackgroundRectProps'
+  | 'dotColor'
+> & {
+  frameSize: number;
+  contentXY: number;
+  contentSize: number;
+  dPath: string;
+  dCircle: string;
+};
+
+const DefaultQr = ({
+  frameSize,
+  dPath,
+  dCircle,
+  figurePathProps,
+  figureCircleProps,
+  contentXY,
+  content,
+  contentSize,
+  backgroundColor,
+  contentBackgroundRectProps,
+  dotColor,
+}: InnerQrProps) => (
+  <Svg width={frameSize} height={frameSize}>
+    <G>
+      <Path d={dPath} fill={dotColor} {...figurePathProps} />
+      <Path d={dCircle} fill={dotColor} {...figureCircleProps} />
+    </G>
+    {content && (
+      <Rect
+        fill={backgroundColor}
+        x={contentXY}
+        y={contentXY}
+        {...contentBackgroundRectProps}
+        width={contentSize}
+        height={contentSize}
+      />
+    )}
+  </Svg>
+);
+
+type GradientQrProps = InnerQrProps & {
+  gradientColors: ColorValue[];
+  gradientProps?: LinearGradientProps;
+};
+
+const GradientQr = ({
+  frameSize,
+  dPath,
+  dCircle,
+  figurePathProps,
+  figureCircleProps,
+  contentXY,
+  content,
+  contentSize,
+  backgroundColor,
+  contentBackgroundRectProps,
+  gradientColors,
+  gradientProps,
+}: GradientQrProps) => (
+  <Svg width={frameSize} height={frameSize}>
+    <Defs>
+      <LinearGradient id="mask" x1="0" y1="0" x2="1" y2="1" {...gradientProps}>
+        <Stop offset="0" stopColor={gradientColors[0]} />
+        <Stop offset="1" stopColor={gradientColors[1]} />
+      </LinearGradient>
+    </Defs>
+    <G>
+      <Path d={dPath} fill="url(#mask)" {...figurePathProps} />
+      <Path d={dCircle} fill="url(#mask)" {...figureCircleProps} />
+    </G>
+    {content && (
+      <Rect
+        fill={backgroundColor}
+        x={contentXY}
+        y={contentXY}
+        {...contentBackgroundRectProps}
+        width={contentSize}
+        height={contentSize}
+      />
+    )}
+  </Svg>
+);
 
 const round = (number: number) => Math.round(number * 10) / 10;
 
