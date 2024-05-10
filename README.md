@@ -18,7 +18,7 @@ This library allows for easy customization of QR codes, enabling developers to a
 
 ## Example 🖼️
 
-<img src="screenshot/example1.png" width="1027" alt='example'>
+<img src="screenshot/1.png" width="1027" alt='example'>
 
 ## Usage 🛠️
 
