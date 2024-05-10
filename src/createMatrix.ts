@@ -1,4 +1,4 @@
-import QRCode, { QRCodeErrorCorrectionLevel } from 'qrcode';
+import QRCode, { type QRCodeErrorCorrectionLevel } from 'qrcode';
 
 export function createMatrix(
   value: string,
