@@ -49,7 +49,7 @@
     "access": "public"
   },
   "dependencies": {
-    "qrcode": "^1.5.1"
+    "qrcode": "^1.5.3"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -69,7 +69,7 @@
     "react": "18.2.0",
     "react-native": "0.73.6",
     "react-native-builder-bob": "^0.23.2",
-    "react-native-svg": "^13.7.0",
+    "react-native-svg": "^15.2.0",
     "release-it": "^15.0.0",
     "typescript": "^5.2.2"
   },
