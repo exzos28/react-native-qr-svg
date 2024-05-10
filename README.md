@@ -24,23 +24,23 @@ This library allows for easy customization of QR codes, enabling developers to a
 
 ## Props
 
-| Property                    | Description                                                  | Type                    | Default Value       |
-|-----------------------------|--------------------------------------------------------------|-------------------------|---------------------|
-| `value`                     | The string to be converted into a QR code.                   | `string`                | (Required)          |
-| `frameSize`                 | The size of the frame in which the QR code will fit.         | `number`                | (Required)          |
-| `contentCells`              | The number of content cells in the QR code.                  | `number`                | `6`                 |
-| `errorCorrectionLevel`      | The error correction level for the QR code.                  | `QRCodeErrorCorrectionLevel` | `'M'`       |
-| `backgroundColor`          | The background color of the QR code.                        | `string`                | `'#ffffff'`         |
-| `dotColor`                  | The color of the dots (circles) in the QR code.             | `string`                | `'#000000'`         |
-| `style`                     | Style for the container of the QR code.                     | `StyleProp<ViewStyle>`  |        |
-| `contentBackgroundRectProps`| Props for the background rectangle of the QR code content.  | `RectProps`             |        |
-| `content`                   | Additional content to be rendered within the QR code.       | `React.ReactNode`       |        |
-| `contentStyle`              | Style for the additional content within the QR code.        | `StyleProp<ViewStyle>`  |        |
-| `figureCircleProps`         | Props for the circular figures within the QR code.          | `CircleProps`           |        |
-| `figurePathProps`           | Props for the path figures within the QR code.              | `PathProps`             |        |
-| `renderer`                  | Custom renderer for rendering QR code figures.              | `CustomRenderer`        | `defaultRenderer`   |
-| `gradientColors`            | Array of colors for gradient fill of the QR code.           | `ColorValue[]`          |        |
-| `gradientProps`             | Props for configuring the gradient of the QR code.          | `LinearGradientProps`   |        |
+| Property                    | Description                                                  | Type                                         | Default Value     |
+|-----------------------------|--------------------------------------------------------------|----------------------------------------------|-------------------|
+| `value`                     | The string to be converted into a QR code.                   | `string`                                     | (Required)        |
+| `frameSize`                 | The size of the frame in which the QR code will fit.         | `number`                                     | (Required)        |
+| `contentCells`              | The number of content cells in the QR code.                  | `number`                                     | `6`               |
+| `errorCorrectionLevel`      | The error correction level for the QR code.                  | `low, medium, quartile, high, L, M, Q, H, M` | `M`                |
+| `backgroundColor`          | The background color of the QR code.                        | `string`                                     | `'#ffffff'`       |
+| `dotColor`                  | The color of the dots (circles) in the QR code.             | `string`                                     | `'#000000'`       |
+| `style`                     | Style for the container of the QR code.                     | `StyleProp<ViewStyle>`                       |                   |
+| `contentBackgroundRectProps`| Props for the background rectangle of the QR code content.  | `RectProps`                                  |                   |
+| `content`                   | Additional content to be rendered within the QR code.       | `React.ReactNode`                            |                   |
+| `contentStyle`              | Style for the additional content within the QR code.        | `StyleProp<ViewStyle>`                       |                   |
+| `figureCircleProps`         | Props for the circular figures within the QR code.          | `CircleProps`                                |                   |
+| `figurePathProps`           | Props for the path figures within the QR code.              | `PathProps`                                  |                   |
+| `renderer`                  | Custom renderer for rendering QR code figures.              | `CustomRenderer`                             | `defaultRenderer` |
+| `gradientColors`            | Array of colors for gradient fill of the QR code.           | `ColorValue[]`                               |                   |
+| `gradientProps`             | Props for configuring the gradient of the QR code.          | `LinearGradientProps`                        |                   |
 
 
 ## Example 🛠️
