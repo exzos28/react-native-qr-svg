@@ -35,7 +35,7 @@
     "release": "release-it"
   },
   "keywords": [
-    "react-native, QR code, generator, android, iOS, web, svg"
+    "react native, qr code, generator, android, iOS, web, svg, react native qr"
   ],
   "repository": "https://github.com/exzos28/react-native-qr-svg",
   "author": "exzos28 <oleksandr.kurinnyi.dev@gmail.com> (https://github.com/exzos28)",
