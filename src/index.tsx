@@ -41,7 +41,7 @@ export function QrCodeSvg({
     () => createMatrix(value, errorCorrectionLevel),
     [errorCorrectionLevel, value]
   );
-  const matrixCellSize = round((frameSize / originalMatrix.length) * 100) / 100; // Ex. 3.141592653589793 -> 3.14
+  const matrixCellSize = round(frameSize / originalMatrix.length); // Ex. 3.141592653589793 -> 3.1
   const matrixRowLength = originalMatrix[0]?.length ?? 0;
   const roundedContentCells =
     (matrixRowLength - contentCells) % 2 === 0
@@ -190,7 +190,7 @@ export function QrCodeSvg({
   );
 }
 
-const round = (number: number) => Math.round(number * 100) / 100;
+const round = (number: number) => Math.round(number * 10) / 10;
 
 const styles = StyleSheet.create({
   content: {
