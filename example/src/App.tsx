@@ -2,6 +2,7 @@ import React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
 import { QrCodeSvg } from 'react-native-qr-svg';
+import { plainRenderer } from '../../src/renderers';
 
 export default function App() {
   return (
@@ -35,7 +36,11 @@ export default function App() {
         />
       </View>
       <View style={styles.qr}>
-        <QrCodeSvg value="Hello world!" padding={0.5} frameSize={200} />
+        <QrCodeSvg
+          renderer={plainRenderer}
+          value="Hello world!"
+          frameSize={200}
+        />
       </View>
     </View>
   );

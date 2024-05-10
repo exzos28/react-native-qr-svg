@@ -1,3 +1,16 @@
+export type Dot = {
+  x: number;
+  y: number;
+};
+
+export type Corners = {
+  q1: Dot;
+  q2: Dot;
+  q3: Dot;
+  q4: Dot;
+  center: Dot;
+};
+
 /**
  * Returns the positions of the corners for drawing the shape
  * @param x
@@ -10,7 +23,7 @@ export default function getCorners(
   y: number,
   cellSize: number,
   padding: number
-) {
+): Corners {
   // q4  0  0  0  q1
   // 0   0  0   0  0
   // 0   0  0   0  0

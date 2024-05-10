@@ -6,6 +6,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import type { QRCodeErrorCorrectionLevel } from 'qrcode';
 import type { Neighbors } from './types';
+import { type CustomRenderer, defaultRenderer } from './renderers';
 import renderFigure from './renderFigure';
 
 export type QrCodeSvgProps = {
@@ -21,7 +22,7 @@ export type QrCodeSvgProps = {
   contentStyle?: StyleProp<ViewStyle>;
   figureCircleProps?: CircleProps;
   figurePathProps?: PathProps;
-  padding?: number;
+  renderer?: CustomRenderer;
 };
 
 export function QrCodeSvg({
@@ -37,7 +38,7 @@ export function QrCodeSvg({
   contentStyle,
   figureCircleProps,
   figurePathProps,
-  padding = 0.05,
+  renderer = defaultRenderer,
 }: QrCodeSvgProps) {
   const originalMatrix = useMemo(
     () => createMatrix(value, errorCorrectionLevel),
@@ -86,10 +87,10 @@ export function QrCodeSvg({
           };
           const x = j * cell;
           const y = i * cell;
-          return [renderFigure(x, y, neighbors, cell, padding)];
+          return [renderFigure(x, y, neighbors, cell, renderer)];
         })
       ),
-    [matrix, padding, cell]
+    [renderer, matrix, cell]
   );
   const dPath = paths
     .filter((_) => _.type === 'path')
