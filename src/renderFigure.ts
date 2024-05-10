@@ -1,6 +1,5 @@
-import type { Neighbors } from './types';
+import { type CustomRenderer, Kind, type Neighbors } from './types';
 import getCorners from './getCornets';
-import { type CustomRenderer, Kind } from './renderers';
 
 export default function renderFigure(
   x: number,

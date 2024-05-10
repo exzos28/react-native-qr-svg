@@ -13,9 +13,9 @@ import Svg, { G, Path, Rect } from 'react-native-svg';
 import type { ColorValue, StyleProp, ViewStyle } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import type { QRCodeErrorCorrectionLevel } from 'qrcode';
-import type { Neighbors } from './types';
-import { type CustomRenderer, defaultRenderer } from './renderers';
+import type { CustomRenderer, Neighbors } from './types';
 import renderFigure from './renderFigure';
+import { defaultRenderer } from './renderers';
 
 export type QrCodeSvgProps = {
   value: string;
@@ -35,7 +35,7 @@ export type QrCodeSvgProps = {
   gradientProps?: LinearGradientProps;
 };
 
-export function QrCodeSvg({
+export default function QrCodeSvg({
   value,
   frameSize,
   contentCells = 6,

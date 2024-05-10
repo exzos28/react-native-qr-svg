@@ -1,20 +1,4 @@
-import type { Corners, Dot } from './getCornets';
-import type { Neighbors } from './types';
-
-export type CustomRenderer = {
-  render: Record<
-    Kind,
-    (n: Neighbors, c: Corners, cell: number, padding: number) => string
-  >;
-  options?: {
-    padding: number;
-  };
-};
-
-export enum Kind {
-  Circle,
-  Element,
-}
+import { type CustomRenderer, type Dot, Kind } from './types';
 
 const pair = (d: Dot) => `${d.x} ${d.y}`;
 const line = (d: Dot) => `L${pair(d)}`;

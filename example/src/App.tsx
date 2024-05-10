@@ -1,8 +1,7 @@
 import React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { QrCodeSvg } from 'react-native-qr-svg';
-import { plainRenderer } from '../../src/renderers';
+import { QrCodeSvg, plainRenderer } from 'react-native-qr-svg';
 
 const SIZE = 170;
 const CONTENT = 'Hello world!';

@@ -1,15 +1,4 @@
-export type Dot = {
-  x: number;
-  y: number;
-};
-
-export type Corners = {
-  q1: Dot;
-  q2: Dot;
-  q3: Dot;
-  q4: Dot;
-  center: Dot;
-};
+import type { Corners } from './types';
 
 /**
  * Returns the positions of the corners for drawing the shape
