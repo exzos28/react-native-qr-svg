@@ -17,21 +17,39 @@ import type { CustomRenderer, Neighbors } from './types';
 import renderFigure from './renderFigure';
 import { defaultRenderer } from './renderers';
 
+/**
+ * Properties for configuring the SVG QR code generation component.
+ */
 export type QrCodeSvgProps = {
+  /** The string to be converted into a QR code. */
   value: string;
+  /** The size of the frame in which the QR code will fit. */
   frameSize: number;
+  /** The number of content cells in the QR code. */
   contentCells?: number;
+  /** The error correction level for the QR code. */
   errorCorrectionLevel?: QRCodeErrorCorrectionLevel;
+  /** The background color of the QR code. */
   backgroundColor?: string;
+  /** The color of the dots (circles) in the QR code. */
   dotColor?: string;
+  /** Style for the container of the QR code. */
   style?: StyleProp<ViewStyle>;
+  /** Props for the background rectangle of the QR code content. */
   contentBackgroundRectProps?: RectProps;
+  /** Additional content to be rendered within the QR code. */
   content?: React.ReactNode;
+  /** Style for the additional content within the QR code. */
   contentStyle?: StyleProp<ViewStyle>;
+  /** Props for the circular figures within the QR code. */
   figureCircleProps?: CircleProps;
+  /** Props for the path figures within the QR code. */
   figurePathProps?: PathProps;
+  /** Custom renderer for rendering QR code figures. */
   renderer?: CustomRenderer;
+  /** Array of colors for gradient fill of the QR code. */
   gradientColors?: ColorValue[];
+  /** Props for configuring the gradient of the QR code. */
   gradientProps?: LinearGradientProps;
 };
 
