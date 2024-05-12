@@ -1,49 +1,26 @@
-import { type CustomRenderer, type Dot, Kind } from './types';
+import { type Corners, type CustomRenderer, type Dot, Kind } from './types';
 
 const pair = (d: Dot) => `${d.x} ${d.y}`;
 const line = (d: Dot) => `L${pair(d)}`;
 
 export const plainRenderer: CustomRenderer = {
   render: {
-    [Kind.Circle]: (_, c) =>
-      `M${pair(c.q1)} ${line(c.q2)} ${line(c.q3)} ${line(c.q4)}`,
-    [Kind.Element]: (_, c) =>
-      `M${pair(c.q1)} ${line(c.q2)} ${line(c.q3)} ${line(c.q4)}`,
+    [Kind.Circle]: ({ corners: c }) => renderSquare(c),
+    [Kind.Element]: ({ corners: c }) => renderSquare(c),
   },
 };
 
 export const defaultRenderer: CustomRenderer = {
   render: {
-    [Kind.Circle]: (_, c, cell) => {
-      const half = cell / 2;
-      const { center } = c;
-      return `M${center.x + half} ${center.y} A${half} ${half} 0 1 0 ${center.x - half} ${center.y} A${half} ${half} 0 1 0 ${center.x + half} ${center.y}`;
-    },
-    [Kind.Element]: (neighbors, c, cell, padding) => {
-      const half = cell / 2;
-      const { center, q2, q3, q4, q1 } = c;
+    [Kind.Circle]: ({ corners, cellSize }) =>
+      renderCircle(corners.center, cellSize),
+    [Kind.Element]: ({ neighbors, corners }) => {
+      const { q2, q3, q4, q1, d1, d2, d4, d3 } = corners;
       // q4  0  d1  0  q1
       // 0   0  0   0  0
       // d4  0  0   0  d2
       // 0   0  0   0  0
       // q3  0  d3  0  q2
-      const d1 = {
-        x: center.x,
-        y: center.y - half + padding,
-      };
-      const d2 = {
-        x: center.x + half - padding,
-        y: center.y,
-      };
-      const d3 = {
-        x: center.x,
-        y: center.y + half - padding,
-      };
-      const d4 = {
-        x: center.x - half + padding,
-        y: center.y,
-      };
-
       const d1d2 =
         neighbors.top || neighbors.right
           ? `L${q1.x} ${q1.y} L${d2.x} ${d2.y}`
@@ -65,3 +42,29 @@ export const defaultRenderer: CustomRenderer = {
     },
   },
 };
+
+export const triangleRenderer: CustomRenderer = {
+  render: {
+    [Kind.Circle]: ({ corners: c }) =>
+      `M${pair(c.d1)} ${line(c.d2)} ${line(c.d3)} ${line(c.d4)}`,
+    [Kind.Element]: ({ corners: c }) =>
+      `M${pair(c.d1)} ${line(c.d2)} ${line(c.d3)} ${line(c.d4)}`,
+  },
+};
+
+export const circleRenderer: CustomRenderer = {
+  render: {
+    [Kind.Circle]: ({ corners, cellSize }) =>
+      renderCircle(corners.center, cellSize),
+    [Kind.Element]: ({ corners, cellSize }) =>
+      renderCircle(corners.center, cellSize),
+  },
+};
+
+export const renderCircle = (center: Dot, cellSize: number) => {
+  const half = cellSize / 2;
+  return `M${center.x + half} ${center.y} A${half} ${half} 0 1 0 ${center.x - half} ${center.y} A${half} ${half} 0 1 0 ${center.x + half} ${center.y}`;
+};
+
+export const renderSquare = (c: Corners) =>
+  `M${pair(c.q1)} ${line(c.q2)} ${line(c.q3)} ${line(c.q4)}`;

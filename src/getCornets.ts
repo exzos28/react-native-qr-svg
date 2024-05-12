@@ -13,11 +13,12 @@ export default function getCorners(
   cellSize: number,
   padding: number
 ): Corners {
-  // q4  0  0  0  q1
+  const half = cellSize / 2;
+  // q4  0  d1  0  q1
   // 0   0  0   0  0
+  // d4  0  0   0  d2
   // 0   0  0   0  0
-  // 0   0  0   0  0
-  // q3  0  0  0  q2
+  // q3  0  d3  0  q2
   const q1 = {
     x: x + cellSize - padding,
     y: y + padding,
@@ -35,5 +36,23 @@ export default function getCorners(
     y: y + padding,
   };
   const center = { x: x + cellSize / 2, y: y + cellSize / 2 };
-  return { q1, q2, q3, q4, center };
+
+  const d1 = {
+    x: center.x,
+    y: center.y - half + padding,
+  };
+  const d2 = {
+    x: center.x + half - padding,
+    y: center.y,
+  };
+  const d3 = {
+    x: center.x,
+    y: center.y + half - padding,
+  };
+  const d4 = {
+    x: center.x - half + padding,
+    y: center.y,
+  };
+
+  return { q1, q2, q3, q4, center, d1, d2, d3, d4 };
 }

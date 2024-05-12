@@ -75,16 +75,16 @@ export default function QrCodeSvg({
     () => createMatrix(value, errorCorrectionLevel),
     [errorCorrectionLevel, value]
   );
-  const cell = round(frameSize / originalMatrix.length); // Ex. 3.141592653589793 -> 3.1
+  const cellSize = round(frameSize / originalMatrix.length); // Ex. 3.141592653589793 -> 3.1
   const matrixRowLength = originalMatrix[0]?.length ?? 0;
   const roundedContentCells =
     (matrixRowLength - contentCells) % 2 === 0
       ? contentCells
       : contentCells + 1;
-  const contentSize = cell * roundedContentCells;
+  const contentSize = cellSize * roundedContentCells;
   const contentStartIndex = (matrixRowLength - roundedContentCells) / 2;
   const contentEndIndex = contentStartIndex + roundedContentCells - 1;
-  const contentXY = contentStartIndex * cell;
+  const contentXY = contentStartIndex * cellSize;
 
   const matrix = useMemo(
     () =>
@@ -103,6 +103,12 @@ export default function QrCodeSvg({
     [content, contentEndIndex, contentStartIndex, originalMatrix]
   );
 
+  const matrixFocusSquareDeepIndex = matrix[0]?.findIndex((_) => _ === 0);
+  if (matrixFocusSquareDeepIndex === undefined) {
+    throw new Error("Focus square wasn't detected");
+  }
+  const matrixFocusSquareDeep = matrixFocusSquareDeepIndex;
+
   const paths = useMemo(
     () =>
       matrix.flatMap((row, i) =>
@@ -116,13 +122,26 @@ export default function QrCodeSvg({
             left: Boolean(row[j - 1]),
             right: Boolean(row[j + 1]),
           };
-          const x = j * cell;
-          const y = i * cell;
-          return [renderFigure(x, y, neighbors, cell, renderer)];
+          const x = j * cellSize;
+          const y = i * cellSize;
+          return [
+            renderFigure(
+              x,
+              y,
+              neighbors,
+              cellSize,
+              renderer,
+              matrixFocusSquareDeep,
+              i,
+              j,
+              matrix.length
+            ),
+          ];
         })
       ),
-    [renderer, matrix, cell]
+    [matrix, cellSize, renderer, matrixFocusSquareDeep]
   );
+
   const dPath = paths
     .filter((_) => _.type === 'path')
     .map((_) => _.d)
@@ -145,33 +164,35 @@ export default function QrCodeSvg({
   };
   return (
     <View testID="root" style={[{ backgroundColor }, style]}>
-      {Array.isArray(gradientColors) ? (
-        <GradientQr
-          {...qrProps}
-          gradientColors={gradientColors}
-          gradientProps={gradientProps}
-        />
-      ) : (
-        <DefaultQr {...qrProps} />
-      )}
+      <View>
+        {Array.isArray(gradientColors) ? (
+          <GradientQr
+            {...qrProps}
+            gradientColors={gradientColors}
+            gradientProps={gradientProps}
+          />
+        ) : (
+          <DefaultQr {...qrProps} />
+        )}
 
-      {content && (
-        <View
-          testID="content"
-          style={[
-            {
-              width: contentSize,
-              height: contentSize,
-              top: contentXY,
-              left: contentXY,
-            },
-            styles.content,
-            contentStyle,
-          ]}
-        >
-          {content}
-        </View>
-      )}
+        {content && (
+          <View
+            testID="content"
+            style={[
+              {
+                width: contentSize,
+                height: contentSize,
+                top: contentXY,
+                left: contentXY,
+              },
+              styles.content,
+              contentStyle,
+            ]}
+          >
+            {content}
+          </View>
+        )}
+      </View>
     </View>
   );
 }

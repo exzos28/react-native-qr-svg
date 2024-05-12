@@ -38,7 +38,6 @@ describe('QrCodeSvg', () => {
       <QrCodeSvg value="Test" frameSize={200} dotColor="red" />
     );
     const dots = getAllByTestId('dot');
-    dots.forEach((_) => console.log(_.props));
     const allEqual = dots.every((_) => _.props.fill.payload === 4294901760); // is it red? wtf
     expect(allEqual).toBe(true);
   });

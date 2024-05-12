@@ -16,13 +16,24 @@ export type Corners = {
   q3: Dot;
   q4: Dot;
   center: Dot;
+  d1: Dot;
+  d2: Dot;
+  d3: Dot;
+  d4: Dot;
+};
+
+export type RenderParams = {
+  neighbors: Neighbors;
+  corners: Corners;
+  cellSize: number;
+  padding: number;
+  isSquareElem: boolean;
+  i: number;
+  j: number;
 };
 
 export type CustomRenderer = {
-  render: Record<
-    Kind,
-    (n: Neighbors, c: Corners, cell: number, padding: number) => string
-  >;
+  render: Record<Kind, (params: RenderParams) => string>;
   options?: {
     padding: number;
   };
