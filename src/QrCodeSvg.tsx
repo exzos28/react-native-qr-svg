@@ -144,7 +144,7 @@ export default function QrCodeSvg({
     dotColor,
   };
   return (
-    <View style={[{ backgroundColor }, style]}>
+    <View testID="root" style={[{ backgroundColor }, style]}>
       {Array.isArray(gradientColors) ? (
         <GradientQr
           {...qrProps}
@@ -157,6 +157,7 @@ export default function QrCodeSvg({
 
       {content && (
         <View
+          testID="content"
           style={[
             {
               width: contentSize,
@@ -204,10 +205,10 @@ const DefaultQr = ({
   contentBackgroundRectProps,
   dotColor,
 }: InnerQrProps) => (
-  <Svg width={frameSize} height={frameSize}>
+  <Svg testID="svg" width={frameSize} height={frameSize}>
     <G>
-      <Path d={dPath} fill={dotColor} {...figurePathProps} />
-      <Path d={dCircle} fill={dotColor} {...figureCircleProps} />
+      <Path testID="dot" d={dPath} fill={dotColor} {...figurePathProps} />
+      <Path testID="dot" d={dCircle} fill={dotColor} {...figureCircleProps} />
     </G>
     {content && (
       <Rect
@@ -243,7 +244,7 @@ const GradientQr = ({
 }: GradientQrProps) => {
   const id = useRef(nanoid(10)).current;
   return (
-    <Svg width={frameSize} height={frameSize}>
+    <Svg testID="svg" width={frameSize} height={frameSize}>
       <Defs>
         <LinearGradient id={id} x1="0" y1="0" x2="1" y2="1" {...gradientProps}>
           <Stop offset="0" stopColor={gradientColors[0]} />
