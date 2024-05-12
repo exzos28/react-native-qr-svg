@@ -47,11 +47,15 @@ This library allows for easy customization of QR codes, enabling developers to a
 
 Implement QR codes easily in your React Native app:
 
+[Full example use can find here.](./example/src/App.tsx)
 ```js
 import React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { QrCodeSvg, plainRenderer } from 'react-native-qr-svg';
+import {
+  QrCodeSvg,
+  plainRenderer,
+} from 'react-native-qr-svg';
 
 const SIZE = 170;
 const CONTENT = 'Hello world!';
@@ -60,48 +64,42 @@ export default function App() {
   return (
     <View style={styles.root}>
       <View style={styles.content}>
-        <View style={styles.qr}>
-          <QrCodeSvg
-            value={CONTENT}
-            frameSize={SIZE}
-            contentCells={5}
-            content={
-              <View>
-                <Text style={styles.icon}>👋</Text>
-              </View>
-            }
-            contentStyle={styles.box}
-          />
-        </View>
-        <View style={styles.qr}>
-          <QrCodeSvg
-            gradientColors={['#0800ff', '#ff0000']}
-            value={CONTENT}
-            frameSize={SIZE}
-          />
-        </View>
-        <View style={[styles.qr, styles.secondQr]}>
-          <QrCodeSvg
-            value={CONTENT}
-            frameSize={SIZE}
-            contentCells={5}
-            content={
-              <View>
-                <Text style={styles.icon}>💻</Text>
-              </View>
-            }
-            dotColor="#ffffff"
-            backgroundColor="#000000"
-            contentStyle={styles.box}
-          />
-        </View>
-        <View style={styles.qr}>
-          <QrCodeSvg
-            renderer={plainRenderer}
-            value={CONTENT}
-            frameSize={SIZE}
-          />
-        </View>
+        <QrCodeSvg
+          style={styles.qr}
+          value={CONTENT}
+          frameSize={SIZE}
+          contentCells={5}
+          content={<Text style={styles.icon}>👋</Text>}
+          contentStyle={styles.box}
+        />
+        <QrCodeSvg
+          style={styles.qr}
+          gradientColors={['#0800ff', '#ff0000']}
+          value={CONTENT}
+          frameSize={SIZE}
+        />
+        <QrCodeSvg
+          style={styles.qr}
+          value={CONTENT}
+          frameSize={SIZE}
+          contentCells={5}
+          content={<Text style={styles.icon}>💻</Text>}
+          dotColor="#ffffff"
+          backgroundColor="#000000"
+          contentStyle={styles.box}
+        />
+        <QrCodeSvg
+          style={styles.qr}
+          renderer={plainRenderer}
+          value={CONTENT}
+          frameSize={SIZE}
+        />
+        <QrCodeSvg
+          style={styles.qr}
+          renderer={customRenderer}
+          value={CONTENT}
+          frameSize={SIZE}
+        />
       </View>
     </View>
   );
@@ -129,13 +127,7 @@ const styles = StyleSheet.create({
   qr: {
     padding: 15,
   },
-  secondQr: {
-    backgroundColor: '#000000',
-  },
 });
-
-
-
 ```
 
 ## Contributing 🤝
