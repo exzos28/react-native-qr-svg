@@ -84,7 +84,7 @@ export default function QrCodeSvg({
     (matrixRowLength - contentCells) % 2 === 0
       ? contentCells
       : contentCells + 1;
-  const contentSize = cellSize * roundedContentCells;
+  const contentSize = round(cellSize * roundedContentCells);
   const contentStartIndex = (matrixRowLength - roundedContentCells) / 2;
   const contentEndIndex = contentStartIndex + roundedContentCells - 1;
   const contentXY = contentStartIndex * cellSize;

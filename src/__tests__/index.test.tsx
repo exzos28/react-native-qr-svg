@@ -64,7 +64,7 @@ describe('QrCodeSvg', () => {
     );
     const contentElement = getByTestId('content');
     const style = StyleSheet.flatten(contentElement.props.style);
-    expect(style.width).toBe(47.5);
-    expect(style.height).toBe(47.5);
+    expect(style.width).toBe(47.59);
+    expect(style.height).toBe(47.59);
   });
 });
