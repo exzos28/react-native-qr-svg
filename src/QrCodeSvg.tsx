@@ -75,7 +75,7 @@ export default function QrCodeSvg({
     () => createMatrix(value, errorCorrectionLevel),
     [errorCorrectionLevel, value]
   );
-  const cellSize = round(frameSize / originalMatrix.length); // Ex. 3.141592653589793 -> 3.1
+  const cellSize = round(frameSize / originalMatrix.length); // Ex. 3.141592653589793 -> 3.14
   const matrixRowLength = originalMatrix[0]?.length ?? 0;
   const roundedContentCells =
     (matrixRowLength - contentCells) % 2 === 0
@@ -290,7 +290,7 @@ const GradientQr = ({
   );
 };
 
-const round = (number: number) => Math.round(number * 10) / 10;
+const round = (number: number) => Math.round(number * 100) / 100;
 
 const styles = StyleSheet.create({
   content: {
