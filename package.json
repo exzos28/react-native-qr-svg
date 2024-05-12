@@ -38,6 +38,7 @@
     "react-native",
     "qrcode",
     "svg",
+    "qr",
     "generator",
     "android",
     "ios",
