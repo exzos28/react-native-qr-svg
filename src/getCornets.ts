@@ -1,4 +1,5 @@
 import type { Corners } from './types';
+import { round } from './round';
 
 /**
  * Returns the positions of the corners for drawing the shape
@@ -13,7 +14,7 @@ export default function getCorners(
   cellSize: number,
   padding: number
 ): Corners {
-  const half = cellSize / 2;
+  const half = round(cellSize / 2);
   // q4  0  d1  0  q1
   // 0   0  0   0  0
   // d4  0  0   0  d2
@@ -35,7 +36,7 @@ export default function getCorners(
     x: x + padding,
     y: y + padding,
   };
-  const center = { x: x + cellSize / 2, y: y + cellSize / 2 };
+  const center = { x: x + half, y: y + half };
 
   const d1 = {
     x: center.x,

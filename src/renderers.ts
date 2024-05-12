@@ -1,4 +1,5 @@
 import { type Corners, type CustomRenderer, type Dot, Kind } from './types';
+import { round } from './round';
 
 const pair = (d: Dot) => `${d.x} ${d.y}`;
 const line = (d: Dot) => `L${pair(d)}`;
@@ -62,7 +63,7 @@ export const circleRenderer: CustomRenderer = {
 };
 
 export const renderCircle = (center: Dot, cellSize: number) => {
-  const half = cellSize / 2;
+  const half = round(cellSize / 2);
   return `M${center.x + half} ${center.y} A${half} ${half} 0 1 0 ${center.x - half} ${center.y} A${half} ${half} 0 1 0 ${center.x + half} ${center.y}`;
 };
 

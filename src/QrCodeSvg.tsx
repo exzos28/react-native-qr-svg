@@ -1,15 +1,17 @@
 import React, { useMemo, useRef } from 'react';
 import { createMatrix } from './createMatrix';
-import {
+import Svg, {
   type CircleProps,
   Defs,
+  G,
   LinearGradient,
   type LinearGradientProps,
+  Path,
   type PathProps,
+  Rect,
   type RectProps,
   Stop,
 } from 'react-native-svg';
-import Svg, { G, Path, Rect } from 'react-native-svg';
 import type { ColorValue, StyleProp, ViewStyle } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import type { QRCodeErrorCorrectionLevel } from 'qrcode';
@@ -17,6 +19,7 @@ import type { CustomRenderer, Neighbors } from './types';
 import renderFigure from './renderFigure';
 import { defaultRenderer } from './renderers';
 import { nanoid } from 'nanoid/non-secure';
+import { round } from './round';
 
 /**
  * Properties for configuring the SVG QR code generation component.
@@ -289,8 +292,6 @@ const GradientQr = ({
     </Svg>
   );
 };
-
-const round = (number: number) => Math.round(number * 100) / 100;
 
 const styles = StyleSheet.create({
   content: {
