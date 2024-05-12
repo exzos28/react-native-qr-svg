@@ -55,6 +55,7 @@
     "access": "public"
   },
   "dependencies": {
+    "nanoid": "^5.0.7",
     "qrcode": "^1.5.3"
   },
   "devDependencies": {

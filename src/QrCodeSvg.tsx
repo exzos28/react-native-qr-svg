@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { createMatrix } from './createMatrix';
 import {
   type CircleProps,
@@ -16,6 +16,7 @@ import type { QRCodeErrorCorrectionLevel } from 'qrcode';
 import type { CustomRenderer, Neighbors } from './types';
 import renderFigure from './renderFigure';
 import { defaultRenderer } from './renderers';
+import { nanoid } from 'nanoid/non-secure';
 
 /**
  * Properties for configuring the SVG QR code generation component.
@@ -239,30 +240,33 @@ const GradientQr = ({
   contentBackgroundRectProps,
   gradientColors,
   gradientProps,
-}: GradientQrProps) => (
-  <Svg width={frameSize} height={frameSize}>
-    <Defs>
-      <LinearGradient id="mask" x1="0" y1="0" x2="1" y2="1" {...gradientProps}>
-        <Stop offset="0" stopColor={gradientColors[0]} />
-        <Stop offset="1" stopColor={gradientColors[1]} />
-      </LinearGradient>
-    </Defs>
-    <G>
-      <Path d={dPath} fill="url(#mask)" {...figurePathProps} />
-      <Path d={dCircle} fill="url(#mask)" {...figureCircleProps} />
-    </G>
-    {content && (
-      <Rect
-        fill={backgroundColor}
-        x={contentXY}
-        y={contentXY}
-        {...contentBackgroundRectProps}
-        width={contentSize}
-        height={contentSize}
-      />
-    )}
-  </Svg>
-);
+}: GradientQrProps) => {
+  const id = useRef(nanoid(10)).current;
+  return (
+    <Svg width={frameSize} height={frameSize}>
+      <Defs>
+        <LinearGradient id={id} x1="0" y1="0" x2="1" y2="1" {...gradientProps}>
+          <Stop offset="0" stopColor={gradientColors[0]} />
+          <Stop offset="1" stopColor={gradientColors[1]} />
+        </LinearGradient>
+      </Defs>
+      <G>
+        <Path d={dPath} fill={`url(#${id})`} {...figurePathProps} />
+        <Path d={dCircle} fill={`url(#${id})`} {...figureCircleProps} />
+      </G>
+      {content && (
+        <Rect
+          fill={backgroundColor}
+          x={contentXY}
+          y={contentXY}
+          {...contentBackgroundRectProps}
+          width={contentSize}
+          height={contentSize}
+        />
+      )}
+    </Svg>
+  );
+};
 
 const round = (number: number) => Math.round(number * 10) / 10;
 
