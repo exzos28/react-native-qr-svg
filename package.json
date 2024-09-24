@@ -1,6 +1,6 @@
 {
   "name": "react-native-qr-svg",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Generate attractive QR codes for your React Native projects, compatible with Android, iOS, and web platforms.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
