@@ -3116,9 +3116,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/cli@npm:0.17.11":
-  version: 0.17.11
-  resolution: "@expo/cli@npm:0.17.11"
+"@expo/cli@npm:0.17.13":
+  version: 0.17.13
+  resolution: "@expo/cli@npm:0.17.13"
   dependencies:
     "@babel/runtime": ^7.20.0
     "@expo/code-signing-certificates": 0.0.5
@@ -3128,7 +3128,7 @@ __metadata:
     "@expo/env": ~0.2.2
     "@expo/image-utils": ^0.4.0
     "@expo/json-file": ^8.2.37
-    "@expo/metro-config": ~0.17.0
+    "@expo/metro-config": 0.17.8
     "@expo/osascript": ^2.0.31
     "@expo/package-manager": ^1.1.1
     "@expo/plist": ^0.1.0
@@ -3198,7 +3198,7 @@ __metadata:
     ws: ^8.12.1
   bin:
     expo-internal: build/bin/cli
-  checksum: c19ec32101538fd555f3809815f40ef3d84d169fe0c2db90f5824245d9bc92f9686b65bfacf6a9ab335276b2329af25c614f72a2afce7527234148ffcc530b4e
+  checksum: 937fe8e0aa962afff85177dcac7b14536f2798276484d10beec6d7d15309326e284321b005f96be94802333fc8e04c0de228afb37f4984436130ba6747760c0a
   languageName: node
   linkType: hard
 
@@ -3362,9 +3362,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/metro-config@npm:0.17.7, @expo/metro-config@npm:~0.17.0":
-  version: 0.17.7
-  resolution: "@expo/metro-config@npm:0.17.7"
+"@expo/metro-config@npm:0.17.8":
+  version: 0.17.8
+  resolution: "@expo/metro-config@npm:0.17.8"
   dependencies:
     "@babel/core": ^7.20.0
     "@babel/generator": ^7.20.5
@@ -3388,7 +3388,7 @@ __metadata:
     sucrase: 3.34.0
   peerDependencies:
     "@react-native/babel-preset": "*"
-  checksum: 2e1ff484e286a2d66bbbf925c42609ef347cb84ee66fcb567ddad7effc3f833d448ae955c98624926b7895c1eeaedd100cb4e325973c40288183131b39e4d76e
+  checksum: 2168f07871383e2183a39185e61985e2b100714f219af68227207a6fb85723a2b26648ce2c1dcfd4b6df06f99a9dd7da6483de81d97a1eb368521db8f297a52e
   languageName: node
   linkType: hard
 
@@ -3502,9 +3502,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/webpack-config@npm:^18.0.1":
-  version: 18.1.4
-  resolution: "@expo/webpack-config@npm:18.1.4"
+"@expo/webpack-config@npm:~19.0.1":
+  version: 19.0.1
+  resolution: "@expo/webpack-config@npm:19.0.1"
   dependencies:
     "@babel/core": ^7.20.2
     babel-loader: ^8.3.0
@@ -3513,15 +3513,16 @@ __metadata:
     copy-webpack-plugin: ^10.2.0
     css-loader: ^6.5.1
     css-minimizer-webpack-plugin: ^3.4.1
-    expo-pwa: 0.0.126
+    expo-pwa: 0.0.127
     find-up: ^5.0.0
     find-yarn-workspace-root: ~2.0.0
+    fs-extra: ^11.2.0
     getenv: ^1.0.0
     html-webpack-plugin: ^5.5.0
     is-wsl: ^2.0.0
     mini-css-extract-plugin: ^2.5.2
     node-html-parser: ^5.2.0
-    semver: ~7.3.2
+    semver: ~7.5.4
     source-map-loader: ^3.0.1
     style-loader: ^3.3.1
     terser-webpack-plugin: ^5.3.0
@@ -3529,8 +3530,8 @@ __metadata:
     webpack-dev-server: ^4.11.1
     webpack-manifest-plugin: ^4.1.1
   peerDependencies:
-    expo: ^48.0.17
-  checksum: c37b5aacf92f9fb9ba0ce47aff5708ca2d803cf32e492e638b89c002a052ba3064f694aa0104df5ce9c887d3222551ba997ab2e2c74e286ede865b4649b8367e
+    expo: ^49.0.7 || ^50.0.0-0
+  checksum: 20f3ed83eccfa9d8de9c08f559685ec0125b537bc465b86927635db47ece4cec109442e8aa734402101de0f631110eb706e4611db8af2d583c64ad2293ec3ecf
   languageName: node
   linkType: hard
 
@@ -9691,18 +9692,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-modules-core@npm:1.11.13":
-  version: 1.11.13
-  resolution: "expo-modules-core@npm:1.11.13"
+"expo-modules-core@npm:1.11.14":
+  version: 1.11.14
+  resolution: "expo-modules-core@npm:1.11.14"
   dependencies:
     invariant: ^2.2.4
-  checksum: c478dcf5652a71e4d14f36977f1f72b3e43760a8b5f0f4049fbf461927de68446eccdf6d5da1864cf27a49ae2a01c04f64ee5d474ecfcde29532ac10747e5cd9
+  checksum: 2fce3481b4cd632693e31412844acad84463da7bc7f104ff065295b68623801a3f97f044d7511fec2d125e06ed81e494a1fc6ebd274e2595c015976ec1788fa8
   languageName: node
   linkType: hard
 
-"expo-pwa@npm:0.0.126":
-  version: 0.0.126
-  resolution: "expo-pwa@npm:0.0.126"
+"expo-pwa@npm:0.0.127":
+  version: 0.0.127
+  resolution: "expo-pwa@npm:0.0.127"
   dependencies:
     "@expo/image-utils": 0.3.23
     chalk: ^4.0.0
@@ -9712,7 +9713,7 @@ __metadata:
     expo: "*"
   bin:
     expo-pwa: build/cli.js
-  checksum: 6a0de8082649913ce23e1015c786bd68218ce5e5ce58dc99d808a820055907a5ab871574fc50b3b802b3d1933749c76971be92145f4a8a178f440b693868b83c
+  checksum: d9fd7bd6d875342caf7eb4a0b893928301b507a4d26830722c56f96e2a973be852bc8ec77a277dde8bc166e95b7c09c58e3014fb8849ba125289f55bd01e39f8
   languageName: node
   linkType: hard
 
@@ -9723,15 +9724,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo@npm:~50.0.17":
-  version: 50.0.18
-  resolution: "expo@npm:50.0.18"
+"expo@npm:~50.0.20":
+  version: 50.0.21
+  resolution: "expo@npm:50.0.21"
   dependencies:
     "@babel/runtime": ^7.20.0
-    "@expo/cli": 0.17.11
+    "@expo/cli": 0.17.13
     "@expo/config": 8.5.6
     "@expo/config-plugins": 7.9.2
-    "@expo/metro-config": 0.17.7
+    "@expo/metro-config": 0.17.8
     "@expo/vector-icons": ^14.0.0
     babel-preset-expo: ~10.0.2
     expo-asset: ~9.0.2
@@ -9739,12 +9740,12 @@ __metadata:
     expo-font: ~11.10.3
     expo-keep-awake: ~12.8.2
     expo-modules-autolinking: 1.10.3
-    expo-modules-core: 1.11.13
+    expo-modules-core: 1.11.14
     fbemitter: ^3.0.0
     whatwg-url-without-unicode: 8.0.0-3
   bin:
     expo: bin/cli
-  checksum: 1244ab372487e6c04fcd2e490f4629f95fbd60e315446f0b1ca18fd11b93017f267cb419838d01e0bf1de9c3aca64637bdcf27bc30fbfb138646ecea6dffd432
+  checksum: 35b9d858865e0a8e6cde3372f86cbf0165f2584fb3ab3ce13e0f119e026ee0ed92176623528b76a4b8433e83273b1dc435fa15675ffcc740c74803653dade058
   languageName: node
   linkType: hard
 
@@ -10249,6 +10250,17 @@ __metadata:
     jsonfile: ^6.0.1
     universalify: ^2.0.0
   checksum: 5ca476103fa1f5ff4a9b3c4f331548f8a3c1881edaae323a4415d3153b5dc11dc6a981c8d1dd93eec8367ceee27b53f8bd27eecbbf66ffcdd04927510c171e7f
+  languageName: node
+  linkType: hard
+
+"fs-extra@npm:^11.2.0":
+  version: 11.2.0
+  resolution: "fs-extra@npm:11.2.0"
+  dependencies:
+    graceful-fs: ^4.2.0
+    jsonfile: ^6.0.1
+    universalify: ^2.0.0
+  checksum: b12e42fa40ba47104202f57b8480dd098aa931c2724565e5e70779ab87605665594e76ee5fb00545f772ab9ace167fe06d2ab009c416dc8c842c5ae6df7aa7e8
   languageName: node
   linkType: hard
 
@@ -16308,27 +16320,40 @@ __metadata:
   resolution: "react-native-qrcode-svg-example@workspace:example"
   dependencies:
     "@babel/core": ^7.20.0
-    "@expo/webpack-config": ^18.0.1
+    "@expo/webpack-config": ~19.0.1
     babel-loader: ^8.1.0
     babel-plugin-module-resolver: ^5.0.0
-    expo: ~50.0.17
+    expo: ~50.0.20
     expo-status-bar: ~1.11.1
     react: 18.2.0
     react-dom: 18.2.0
     react-native: 0.73.6
-    react-native-safe-area-context: ^4.10.1
-    react-native-svg: ^15.2.0
+    react-native-safe-area-context: 4.8.2
+    react-native-svg: 14.1.0
     react-native-web: ~0.19.6
   languageName: unknown
   linkType: soft
 
-"react-native-safe-area-context@npm:^4.10.1":
-  version: 4.10.1
-  resolution: "react-native-safe-area-context@npm:4.10.1"
+"react-native-safe-area-context@npm:4.8.2":
+  version: 4.8.2
+  resolution: "react-native-safe-area-context@npm:4.8.2"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: a0f31a66f0aba7050cfdc34512349f49dd65349d53407d461196fa70010f65aca7310212d5c7c47078745db6e02975a4d97881d0340160d40e0feb5a4a5d9de2
+  checksum: 929eaa5ee522f712e7bfabd0f22908f033918d030c932ddf6a83e4315bc781f7aa44e315806dc8130f75619f09951f3237082f720f4fa65a6670469886cf9735
+  languageName: node
+  linkType: hard
+
+"react-native-svg@npm:14.1.0":
+  version: 14.1.0
+  resolution: "react-native-svg@npm:14.1.0"
+  dependencies:
+    css-select: ^5.1.0
+    css-tree: ^1.1.3
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: ed94adac9bf3144c5dcbf37a2956ab672d402f11c0ed75cda247d1d9136ce8977f4d01bcfc813ba576bd61ece420d66306c148057e2552828aa8fe9bad173d46
   languageName: node
   linkType: hard
 
@@ -17356,7 +17381,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:7.3.8, semver@npm:^7.3.4, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:~7.3.2":
+"semver@npm:7.3.8, semver@npm:^7.3.4, semver@npm:^7.3.5, semver@npm:^7.3.7":
   version: 7.3.8
   resolution: "semver@npm:7.3.8"
   dependencies:
@@ -17402,6 +17427,17 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 40f6a95101e8d854357a644da1b8dd9d93ce786d5c6a77227bc69dbb17bea83d0d1d1d7c4cd5920a6df909f48e8bd8a5909869535007f90278289f2451d0292d
+  languageName: node
+  linkType: hard
+
+"semver@npm:~7.5.4":
+  version: 7.5.4
+  resolution: "semver@npm:7.5.4"
+  dependencies:
+    lru-cache: ^6.0.0
+  bin:
+    semver: bin/semver.js
+  checksum: 12d8ad952fa353b0995bf180cdac205a4068b759a140e5d3c608317098b3575ac2f1e09182206bf2eb26120e1c0ed8fb92c48c592f6099680de56bb071423ca3
   languageName: node
   linkType: hard
 
