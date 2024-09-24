@@ -8799,6 +8799,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"encode-utf8@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "encode-utf8@npm:1.0.3"
+  checksum: 550224bf2a104b1d355458c8a82e9b4ea07f9fc78387bc3a49c151b940ad26473de8dc9e121eefc4e84561cb0b46de1e4cd2bc766f72ee145e9ea9541482817f
+  languageName: node
+  linkType: hard
+
 "encodeurl@npm:~1.0.2":
   version: 1.0.2
   resolution: "encodeurl@npm:1.0.2"
@@ -16075,16 +16082,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qrcode@npm:^1.5.0":
-  version: 1.5.4
-  resolution: "qrcode@npm:1.5.4"
+"qrcode@npm:1.5.3":
+  version: 1.5.3
+  resolution: "qrcode@npm:1.5.3"
   dependencies:
     dijkstrajs: ^1.0.1
+    encode-utf8: ^1.0.3
     pngjs: ^5.0.0
     yargs: ^15.3.1
   bin:
     qrcode: bin/qrcode
-  checksum: 0a162822e12c02b0333315462fd4ccad22255002130f86806773be7592aec5ef295efaffa3eb148cbf00e290839c7b610f63b0d62a0c5efc5bc52a68f4189684
+  checksum: 9a8a20a0a9cb1d15de8e7b3ffa214e8b6d2a8b07655f25bd1b1d77f4681488f84d7bae569870c0652872d829d5f8ac4922c27a6bd14c13f0e197bf07b28dead7
   languageName: node
   linkType: hard
 
@@ -16280,7 +16288,7 @@ __metadata:
     jest: ^29.7.0
     nanoid: ^3.3.7
     prettier: ^3.0.3
-    qrcode: ^1.5.0
+    qrcode: 1.5.3
     react: 18.2.0
     react-native: 0.73.6
     react-native-builder-bob: ^0.23.2

@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "nanoid": "^3.3.7",
-    "qrcode": "^1.5.0"
+    "qrcode": "1.5.3"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
