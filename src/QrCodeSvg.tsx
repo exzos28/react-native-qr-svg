@@ -148,11 +148,11 @@ export default function QrCodeSvg({
   const dPath = paths
     .filter((_) => _.type === 'path')
     .map((_) => _.d)
-    .join();
+    .join(' ');
   const dCircle = paths
     .filter((_) => _.type === 'circle')
     .map((_) => _.d)
-    .join();
+    .join(' ');
   const qrProps = {
     frameSize,
     dPath,
