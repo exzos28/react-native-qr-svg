@@ -45,48 +45,16 @@ export default function App() {
           size={SIZE}
           fill={{ type: 'gradient', colors: ['#0800ff', '#ff0000'] }}
         />
-        <QrCodeSvg
-          style={styles.qr}
-          value={CONTENT}
-          size={SIZE}
-          logo={{
-            source: <Text style={styles.icon}>💻</Text>,
-            cells: 5,
-            style: styles.box,
-          }}
-          color="#ffffff"
-          backgroundColor="#000000"
-        />
-        <QrCodeSvg
-          style={styles.qr}
-          value={CONTENT}
-          size={SIZE}
-          shape="square"
-        />
+        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="dots" />
       </View>
       <View style={styles.row}>
-        <QrCodeSvg
-          style={styles.qr}
-          value={CONTENT}
-          size={SIZE}
-          shape="triangle"
-        />
-        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="dots" />
         <QrCodeSvg
           style={styles.qr}
           value={CONTENT}
           size={SIZE}
           shape={customRenderer}
         />
-        <QrCodeSvg
-          style={styles.qr}
-          value={CONTENT}
-          size={SIZE}
-          separated
-          gap={0.05}
-        />
-      </View>
-      <View style={styles.row}>
+        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} separated />
         {/* No `size` - fills the wrapper's width and stays square via aspectRatio. */}
         <View style={[styles.qr, styles.responsive]}>
           <QrCodeSvg value={CONTENT} />

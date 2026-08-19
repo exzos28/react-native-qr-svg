@@ -311,7 +311,7 @@ const QrCodeSvg = forwardRef<View, QrCodeSvgProps>(function QrCodeSvg(
         style,
       ]}
     >
-      <View style={StyleSheet.absoluteFillObject}>
+      <View style={styles.inner}>
         <QrSvg
           viewBoxSize={matrixRowLength}
           dPath={dPath}
@@ -468,6 +468,12 @@ const QrSvg = ({
 const styles = StyleSheet.create({
   root: {
     aspectRatio: 1,
+  },
+  // flex (not position: 'absolute') so this still respects the root
+  // view's padding - RN ignores a parent's padding for absolutely
+  // positioned children with top/left/right/bottom: 0.
+  inner: {
+    flex: 1,
   },
   content: {
     position: 'absolute',
