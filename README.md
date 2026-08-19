@@ -27,14 +27,14 @@ This library allows for easy customization of QR codes, enabling developers to a
 | Property               | Description                                                                | Type                            | Default Value |
 |-------------------------|-----------------------------------------------------------------------------|----------------------------------|----------------|
 | `value`                 | The string to be converted into a QR code.                                 | `string`                         | (Required)     |
-| `size`                  | The size of the frame in which the QR code will fit.                       | `number`                         | (Required)     |
+| `size`                  | Explicit pixel size. Omit it to have the QR code fill its container's width and stay square via `aspectRatio: 1`. | `number` |  |
 | `errorCorrectionLevel`  | The error correction level for the QR code.                                | `'L' \| 'M' \| 'Q' \| 'H'`       | `'M'`          |
 | `backgroundColor`       | The background color of the QR code.                                       | `string`                         | `'#ffffff'`    |
 | `color`                 | The color of the QR code's modules.                                        | `string`                         | `'#000000'`    |
 | `fill`                  | Solid color or gradient fill for the modules. Overrides `color`.           | `ColorValue \| GradientFill`     |                |
 | `style`                 | Style for the container of the QR code.                                    | `StyleProp<ViewStyle>`           |                |
 | `shape`                 | Built-in shape preset, or a fully custom renderer.                         | `'rounded' \| 'square' \| 'dots' \| 'triangle' \| CustomRenderer` | `'rounded'`    |
-| `gap`                   | Gap between a module and its unconnected neighbors.                        | `number`                         | shape-specific |
+| `gap`                   | Gap between a module and its unconnected neighbors, as a fraction of one module (e.g. `0.05` = 5%). | `number` | shape-specific |
 | `separated`             | Apply `gap` between every module, including connected ones (a visible grid line), instead of only unconnected ones. | `boolean` | `false` |
 | `moduleProps`           | Props applied to the two underlying SVG paths that draw the modules.       | `PathProps`                      |                |
 | `logo`                  | Logo/content rendered in the middle of the QR code.                        | `LogoConfig`                     |                |
@@ -57,6 +57,20 @@ This library allows for easy customization of QR codes, enabling developers to a
 | `cells`            | How many modules wide/tall the cleared area behind it is. | `number`                 | `6`            |
 | `style`            | Style for the logo's container.                           | `StyleProp<ViewStyle>`   |                |
 | `backgroundProps`  | Props for the SVG rect drawn behind the logo.              | `RectProps`              |                |
+
+### Responsive sizing
+
+`size` is optional. All module geometry is built in a matrix-unit coordinate space (one module = 1 unit) and rendered via the SVG's `viewBox`, so scaling to any pixel size is handled entirely by the renderer — no JS measurement involved. Without `size`, the root view uses `aspectRatio: 1` and fills its container's width:
+
+```tsx
+<View style={{ width: '100%' }}>
+  <QrCodeSvg value={value} />
+</View>
+```
+
+Give the container (or `style`) a width for this to have something to fill. Pass `size` when you want an explicit pixel size instead.
+
+Note `moduleProps` (e.g. `strokeWidth`) lives in that same matrix-unit space, so it scales with the rendered size rather than being a fixed pixel value.
 
 ### Error handling
 
@@ -155,27 +169,6 @@ const styles = StyleSheet.create({
   },
 });
 ```
-
-## Upgrading to v2
-
-v2.0.0 is a full API redesign — every prop below was renamed, consolidated, or fixed:
-
-| v1                                                        | v2                                                              |
-|-------------------------------------------------------------|-------------------------------------------------------------------|
-| `frameSize`                                                 | `size`                                                             |
-| `dotColor`                                                   | `color`                                                            |
-| `content`, `contentCells`, `contentStyle`, `contentBackgroundRectProps` | `logo={{ source, cells, style, backgroundProps }}`     |
-| `gradientColors`, `gradientProps`                            | `fill={{ type: 'gradient', colors, ...linearGradientProps }}` (now supports 3+ colors) |
-| `figureCircleProps`, `figurePathProps`                        | `moduleProps`                                                      |
-| `renderer={defaultRenderer \| plainRenderer \| circleRenderer \| triangleRenderer}` | `shape="rounded" \| "square" \| "dots" \| "triangle"` |
-| `renderer={customRenderer}`                                   | `shape={customRenderer}`                                           |
-| `RenderParams.isSquareElem`                                   | `RenderParams.isFinderPattern`                                     |
-| `CustomRenderer.render[Kind.Circle \| Kind.Element]`           | `CustomRenderer.render.circle \| .path`                            |
-| `CustomRenderer.options.padding`                               | `CustomRenderer.options.gap`, or the top-level `gap` prop           |
-| —                                                              | `onError` (new, see above)                                          |
-| —                                                              | `ref` now forwards to the root `View`                                |
-
-Also fixed in v2: adjacent filled modules used to have a small persistent, uneven gap between them (visible as hairline cracks in solid blocks like the finder patterns) regardless of the shape's rounding — modules with a neighbor now sit flush against it by default. Pass `separated` if you deliberately want a visible grid line between every module — it now renders as a straight, consistent line instead of the old uneven one.
 
 ## Contributing 🤝
 

@@ -86,6 +86,12 @@ export default function App() {
           gap={0.05}
         />
       </View>
+      <View style={styles.row}>
+        {/* No `size` - fills the wrapper's width and stays square via aspectRatio. */}
+        <View style={[styles.qr, styles.responsive]}>
+          <QrCodeSvg value={CONTENT} />
+        </View>
+      </View>
     </View>
   );
 }
@@ -110,5 +116,8 @@ const styles = StyleSheet.create({
   },
   qr: {
     padding: 15,
+  },
+  responsive: {
+    width: SIZE,
   },
 });

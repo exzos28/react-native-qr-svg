@@ -31,6 +31,11 @@ import { round } from './round';
 
 const EMPTY_MATRIX: number[][] = [];
 
+// Paths are built in matrix-unit space (one module = 1 unit) and scaled to
+// the rendered size entirely by the SVG's viewBox - no pixel size is ever
+// needed to compute geometry.
+const CELL_SIZE = 1;
+
 const SHAPE_RENDERERS: Record<QrShapeName, CustomRenderer> = {
   rounded: defaultRenderer,
   square: plainRenderer,
@@ -80,8 +85,13 @@ export type LogoConfig = {
 export type QrCodeSvgProps = {
   /** The string to be converted into a QR code. */
   value: string;
-  /** The size of the frame in which the QR code will fit. */
-  size: number;
+  /**
+   * Explicit pixel size for the QR code. When omitted, the QR code fills
+   * its container's width and derives its height to stay square (via
+   * `aspectRatio: 1`) - give the container (or `style`) a width for this
+   * to have something to fill.
+   */
+  size?: number;
   /** The error correction level for the QR code. */
   errorCorrectionLevel?: ErrorCorrectionLevel;
   /** The background color of the QR code. */
@@ -94,11 +104,20 @@ export type QrCodeSvgProps = {
   style?: StyleProp<ViewStyle>;
   /** Built-in shape preset, or a fully custom renderer. */
   shape?: QrShapeName | CustomRenderer;
-  /** Gap between a module and its unconnected neighbors. Overrides the shape's own default. */
+  /**
+   * Gap between a module and its unconnected neighbors, as a fraction of
+   * one module (e.g. `0.05` = 5% of a module). Overrides the shape's own
+   * default.
+   */
   gap?: number;
   /** Apply `gap` between every module, including connected ones, instead of only unconnected ones. */
   separated?: boolean;
-  /** Props applied to the two underlying SVG paths that draw the modules. */
+  /**
+   * Props applied to the two underlying SVG paths that draw the modules.
+   * Note the paths live in the same matrix-unit coordinate space as the
+   * viewBox (one module = 1 unit), so e.g. `strokeWidth` scales with the
+   * rendered size rather than being a fixed pixel value.
+   */
   moduleProps?: PathProps;
   /** Logo/content rendered in the middle of the QR code. */
   logo?: LogoConfig;
@@ -159,15 +178,16 @@ const QrCodeSvg = forwardRef<View, QrCodeSvgProps>(function QrCodeSvg(
   }, [matrixResult.error, onError]);
 
   const originalMatrix = matrixResult.matrix ?? EMPTY_MATRIX;
-  const cellSize = round(size / originalMatrix.length); // Ex. 3.141592653589793 -> 3.14
   const matrixRowLength = originalMatrix[0]?.length ?? 0;
   const logoCells = logo?.cells ?? 6;
   const roundedContentCells =
     (matrixRowLength - logoCells) % 2 === 0 ? logoCells : logoCells + 1;
-  const contentSize = round(cellSize * roundedContentCells);
+  const contentSize = roundedContentCells; // in matrix units (CELL_SIZE === 1)
   const contentStartIndex = (matrixRowLength - roundedContentCells) / 2;
   const contentEndIndex = contentStartIndex + roundedContentCells - 1;
-  const contentXY = contentStartIndex * cellSize;
+  const contentXY = contentStartIndex;
+  const contentSizePercent = round((contentSize / matrixRowLength) * 100);
+  const contentXYPercent = round((contentXY / matrixRowLength) * 100);
 
   const hasLogo = logo !== undefined;
   const matrixInfo = useMemo(() => {
@@ -243,14 +263,14 @@ const QrCodeSvg = forwardRef<View, QrCodeSvgProps>(function QrCodeSvg(
             left: Boolean(row[j - 1]),
             right: Boolean(row[j + 1]),
           };
-          const x = j * cellSize;
-          const y = i * cellSize;
+          const x = j * CELL_SIZE;
+          const y = i * CELL_SIZE;
           return [
             renderFigure(
               x,
               y,
               neighbors,
-              cellSize,
+              CELL_SIZE,
               renderer,
               matrixFocusSquareDeep,
               i,
@@ -260,7 +280,7 @@ const QrCodeSvg = forwardRef<View, QrCodeSvgProps>(function QrCodeSvg(
           ];
         })
       ),
-    [matrix, cellSize, renderer, matrixFocusSquareDeep]
+    [matrix, renderer, matrixFocusSquareDeep]
   );
 
   const { dPath, dCircle } = useMemo(() => {
@@ -281,10 +301,19 @@ const QrCodeSvg = forwardRef<View, QrCodeSvgProps>(function QrCodeSvg(
   }
 
   return (
-    <View ref={ref} testID={testID} style={[{ backgroundColor }, style]}>
-      <View>
+    <View
+      ref={ref}
+      testID={testID}
+      style={[
+        styles.root,
+        size !== undefined ? { width: size, height: size } : null,
+        { backgroundColor },
+        style,
+      ]}
+    >
+      <View style={StyleSheet.absoluteFillObject}>
         <QrSvg
-          size={size}
+          viewBoxSize={matrixRowLength}
           dPath={dPath}
           dCircle={dCircle}
           moduleProps={moduleProps}
@@ -303,10 +332,10 @@ const QrCodeSvg = forwardRef<View, QrCodeSvgProps>(function QrCodeSvg(
             testID={`${testID}-content`}
             style={[
               {
-                width: contentSize,
-                height: contentSize,
-                top: contentXY,
-                left: contentXY,
+                width: `${contentSizePercent}%`,
+                height: `${contentSizePercent}%`,
+                top: `${contentXYPercent}%`,
+                left: `${contentXYPercent}%`,
               },
               styles.content,
               logo.style,
@@ -333,7 +362,7 @@ function isGradientFill(
 }
 
 type QrSvgProps = {
-  size: number;
+  viewBoxSize: number;
   dPath: string;
   dCircle: string;
   moduleProps?: PathProps;
@@ -348,7 +377,7 @@ type QrSvgProps = {
 };
 
 const QrSvg = ({
-  size,
+  viewBoxSize,
   dPath,
   dCircle,
   moduleProps,
@@ -378,7 +407,12 @@ const QrSvg = ({
   } = gradient ?? { type: 'gradient' as const, colors: [] as ColorValue[] };
 
   return (
-    <Svg testID={`${testIDBase}-svg`} width={size} height={size}>
+    <Svg
+      testID={`${testIDBase}-svg`}
+      width="100%"
+      height="100%"
+      viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
+    >
       {gradient && (
         <Defs>
           <LinearGradient
@@ -432,6 +466,9 @@ const QrSvg = ({
 };
 
 const styles = StyleSheet.create({
+  root: {
+    aspectRatio: 1,
+  },
   content: {
     position: 'absolute',
   },

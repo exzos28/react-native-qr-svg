@@ -61,6 +61,26 @@ describe('QrCodeSvg', () => {
     expect(content).toBeDefined();
   });
 
+  it('renders without an explicit size, filling its container via aspectRatio', () => {
+    const { getByTestId } = render(<QrCodeSvg value="Test" />);
+    const root = getByTestId('qr-code');
+    const style = StyleSheet.flatten(root.props.style);
+    expect(style.aspectRatio).toBe(1);
+    expect(style.width).toBeUndefined();
+    expect(style.height).toBeUndefined();
+    const svg = getByTestId('qr-code-svg');
+    expect(svg.props.width).toBe('100%');
+    expect(svg.props.height).toBe('100%');
+  });
+
+  it('applies an explicit width/height when size is given', () => {
+    const { getByTestId } = render(<QrCodeSvg value="Test" size={200} />);
+    const root = getByTestId('qr-code');
+    const style = StyleSheet.flatten(root.props.style);
+    expect(style.width).toBe(200);
+    expect(style.height).toBe(200);
+  });
+
   it('renders background color correctly', () => {
     const { getByTestId } = render(
       <QrCodeSvg value="Test" size={200} backgroundColor="blue" />
@@ -115,8 +135,8 @@ describe('QrCodeSvg', () => {
     );
     const contentElement = getByTestId('qr-code-content');
     const style = StyleSheet.flatten(contentElement.props.style);
-    expect(style.width).toBe(47.59);
-    expect(style.height).toBe(47.59);
+    expect(style.width).toBe('23.8%');
+    expect(style.height).toBe('23.8%');
   });
 
   it('does not recompute figures when an unrelated prop changes', () => {
