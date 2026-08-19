@@ -89,28 +89,31 @@ export default function QrCodeSvg({
   const contentEndIndex = contentStartIndex + roundedContentCells - 1;
   const contentXY = contentStartIndex * cellSize;
 
-  const matrix = useMemo(
-    () =>
-      content !== undefined
-        ? originalMatrix.map((row, i) =>
-            row.map((el, j) =>
-              i >= contentStartIndex &&
-              i <= contentEndIndex &&
-              j >= contentStartIndex &&
-              j <= contentEndIndex
-                ? 0
-                : el
-            )
+  const hasContent = content !== undefined;
+  const { matrix, matrixFocusSquareDeep } = useMemo(() => {
+    const nextMatrix = hasContent
+      ? originalMatrix.map((row, i) =>
+          row.map((el, j) =>
+            i >= contentStartIndex &&
+            i <= contentEndIndex &&
+            j >= contentStartIndex &&
+            j <= contentEndIndex
+              ? 0
+              : el
           )
-        : originalMatrix,
-    [content, contentEndIndex, contentStartIndex, originalMatrix]
-  );
-
-  const matrixFocusSquareDeepIndex = matrix[0]?.findIndex((_) => _ === 0);
-  if (matrixFocusSquareDeepIndex === undefined) {
-    throw new Error("Focus square wasn't detected");
-  }
-  const matrixFocusSquareDeep = matrixFocusSquareDeepIndex;
+        )
+      : originalMatrix;
+    let focusSquareDeepIndex = nextMatrix[0]?.findIndex((_) => _ === 0);
+    if (focusSquareDeepIndex === undefined) {
+      const message = "Focus square wasn't detected";
+      if (__DEV__) {
+        throw new Error(message);
+      }
+      console.warn(message);
+      focusSquareDeepIndex = 0;
+    }
+    return { matrix: nextMatrix, matrixFocusSquareDeep: focusSquareDeepIndex };
+  }, [hasContent, contentEndIndex, contentStartIndex, originalMatrix]);
 
   const paths = useMemo(
     () =>
@@ -145,14 +148,18 @@ export default function QrCodeSvg({
     [matrix, cellSize, renderer, matrixFocusSquareDeep]
   );
 
-  const dPath = paths
-    .filter((_) => _.type === 'path')
-    .map((_) => _.d)
-    .join(' ');
-  const dCircle = paths
-    .filter((_) => _.type === 'circle')
-    .map((_) => _.d)
-    .join(' ');
+  const { dPath, dCircle } = useMemo(() => {
+    const pathParts: string[] = [];
+    const circleParts: string[] = [];
+    for (const figure of paths) {
+      if (figure.type === 'path') {
+        pathParts.push(figure.d);
+      } else {
+        circleParts.push(figure.d);
+      }
+    }
+    return { dPath: pathParts.join(' '), dCircle: circleParts.join(' ') };
+  }, [paths]);
   const qrProps = {
     frameSize,
     dPath,
@@ -266,7 +273,11 @@ const GradientQr = ({
   gradientColors,
   gradientProps,
 }: GradientQrProps) => {
-  const id = useRef(nanoid(10)).current;
+  const idRef = useRef<string | null>(null);
+  if (idRef.current === null) {
+    idRef.current = nanoid(10);
+  }
+  const id = idRef.current;
   return (
     <Svg testID="svg" width={frameSize} height={frameSize}>
       <Defs>

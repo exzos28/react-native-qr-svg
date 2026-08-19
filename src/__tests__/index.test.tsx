@@ -1,9 +1,30 @@
-import React from 'react';
-import { render } from '@testing-library/react-native';
-import { StyleSheet, Text } from 'react-native';
+import React, { useState } from 'react';
+import { fireEvent, render } from '@testing-library/react-native';
+import { Button, StyleSheet, Text } from 'react-native';
 import QrCodeSvg from '../QrCodeSvg';
+import * as renderFigureModule from '../renderFigure';
+import { nanoid } from 'nanoid/non-secure';
 
 jest.useFakeTimers();
+
+jest.mock('../renderFigure', () => {
+  const actual = jest.requireActual('../renderFigure');
+  return {
+    __esModule: true,
+    default: jest.fn(actual.default),
+  };
+});
+
+jest.mock('nanoid/non-secure', () => {
+  const actual = jest.requireActual('nanoid/non-secure');
+  return {
+    __esModule: true,
+    nanoid: jest.fn(actual.nanoid),
+  };
+});
+
+const renderFigureSpy = renderFigureModule.default as jest.Mock;
+const nanoidSpy = nanoid as jest.Mock;
 
 describe('QrCodeSvg', () => {
   it('renders correctly with default props', () => {
@@ -66,5 +87,73 @@ describe('QrCodeSvg', () => {
     const style = StyleSheet.flatten(contentElement.props.style);
     expect(style.width).toBe(47.59);
     expect(style.height).toBe(47.59);
+  });
+
+  it('does not recompute figures when an unrelated prop changes', () => {
+    renderFigureSpy.mockClear();
+    const { rerender } = render(
+      <QrCodeSvg value="Test" frameSize={200} dotColor="red" />
+    );
+    const callsAfterMount = renderFigureSpy.mock.calls.length;
+    expect(callsAfterMount).toBeGreaterThan(0);
+
+    rerender(<QrCodeSvg value="Test" frameSize={200} dotColor="blue" />);
+
+    expect(renderFigureSpy.mock.calls.length).toBe(callsAfterMount);
+  });
+
+  it('does not recompute figures when a new inline content element is passed', () => {
+    renderFigureSpy.mockClear();
+    const { rerender } = render(
+      <QrCodeSvg
+        value="Test"
+        frameSize={200}
+        content={<Text testID="inner-content">A</Text>}
+      />
+    );
+    const callsAfterMount = renderFigureSpy.mock.calls.length;
+    expect(callsAfterMount).toBeGreaterThan(0);
+
+    // a new element instance, but same "content is present" state
+    rerender(
+      <QrCodeSvg
+        value="Test"
+        frameSize={200}
+        content={<Text testID="inner-content">B</Text>}
+      />
+    );
+
+    expect(renderFigureSpy.mock.calls.length).toBe(callsAfterMount);
+  });
+
+  it('generates the gradient id only once, regardless of re-renders', () => {
+    nanoidSpy.mockClear();
+
+    function Wrapper() {
+      const [dotColor, setDotColor] = useState('red');
+      return (
+        <>
+          <QrCodeSvg
+            value="Test"
+            frameSize={200}
+            gradientColors={['red', 'blue']}
+            dotColor={dotColor}
+          />
+          <Button
+            testID="toggle"
+            title="toggle"
+            onPress={() => setDotColor((c) => (c === 'red' ? 'blue' : 'red'))}
+          />
+        </>
+      );
+    }
+
+    const { getByTestId } = render(<Wrapper />);
+    expect(nanoidSpy).toHaveBeenCalledTimes(1);
+
+    fireEvent.press(getByTestId('toggle'));
+    fireEvent.press(getByTestId('toggle'));
+
+    expect(nanoidSpy).toHaveBeenCalledTimes(1);
   });
 });
