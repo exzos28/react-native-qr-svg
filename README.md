@@ -83,7 +83,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { QrCodeSvg, renderCircle, renderSquare, type CustomRenderer, type RenderParams } from 'react-native-qr-svg';
 
-const SIZE = 170;
+const SIZE = 140;
 const CONTENT = 'Hello world!';
 
 const render = ({ isFinderPattern, corners, cellSize }: RenderParams) =>
@@ -99,7 +99,7 @@ const customRenderer: CustomRenderer = {
 export default function App() {
   return (
     <View style={styles.root}>
-      <View style={styles.content}>
+      <View style={styles.row}>
         <QrCodeSvg
           style={styles.qr}
           value={CONTENT}
@@ -121,7 +121,12 @@ export default function App() {
           backgroundColor="#000000"
         />
         <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="square" />
+      </View>
+      <View style={styles.row}>
+        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="triangle" />
+        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="dots" />
         <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape={customRenderer} />
+        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} separated gap={0.05} />
       </View>
     </View>
   );
@@ -133,9 +138,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  content: {
+  row: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
   },
