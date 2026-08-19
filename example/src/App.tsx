@@ -28,7 +28,7 @@ export const customRenderer: CustomRenderer = {
 export default function App() {
   return (
     <View style={styles.root}>
-      <View style={styles.content}>
+      <View style={styles.row}>
         <QrCodeSvg
           style={styles.qr}
           value={CONTENT}
@@ -63,6 +63,8 @@ export default function App() {
           size={SIZE}
           shape="square"
         />
+      </View>
+      <View style={styles.row}>
         <QrCodeSvg
           style={styles.qr}
           value={CONTENT}
@@ -94,9 +96,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  content: {
+  row: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
   },
