@@ -81,7 +81,7 @@ export default function App() {
           value={CONTENT}
           size={SIZE}
           separated
-          gap={0.3}
+          gap={0.1}
         />
       </View>
     </View>
