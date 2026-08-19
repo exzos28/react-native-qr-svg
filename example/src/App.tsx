@@ -76,6 +76,13 @@ export default function App() {
           size={SIZE}
           shape={customRenderer}
         />
+        <QrCodeSvg
+          style={styles.qr}
+          value={CONTENT}
+          size={SIZE}
+          separated
+          gap={0.3}
+        />
       </View>
     </View>
   );
