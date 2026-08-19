@@ -26,20 +26,21 @@ export type RenderParams = {
   neighbors: Neighbors;
   corners: Corners;
   cellSize: number;
-  padding: number;
-  isSquareElem: boolean;
+  gap: number;
+  isFinderPattern: boolean;
   i: number;
   j: number;
 };
 
 export type CustomRenderer = {
-  render: Record<Kind, (params: RenderParams) => string>;
+  render: Record<'circle' | 'path', (params: RenderParams) => string>;
   options?: {
-    padding: number;
+    gap?: number;
+    /** Inset every side by `gap`, even between connected modules. */
+    separated?: boolean;
   };
 };
 
-export enum Kind {
-  Circle,
-  Element,
-}
+export type ErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
+
+export type QrShapeName = 'rounded' | 'square' | 'dots' | 'triangle';

@@ -1,4 +1,4 @@
-export default function isFocusSquareElem(
+export default function isFinderPattern(
   i: number,
   j: number,
   matrixSize: number,

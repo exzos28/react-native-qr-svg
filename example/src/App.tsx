@@ -1,86 +1,62 @@
-import React from 'react';
-
 import { StyleSheet, View, Text } from 'react-native';
 import {
   QrCodeSvg,
-  plainRenderer,
-  triangleRenderer,
-  circleRenderer,
   renderCircle,
   type RenderParams,
   renderSquare,
   type CustomRenderer,
-  Kind,
 } from 'react-native-qr-svg';
 
 const SIZE = 140;
 const CONTENT = 'Hello world!';
 
-const render = ({ isSquareElem, corners, cellSize }: RenderParams) => {
-  if (isSquareElem) {
+const render = ({ isFinderPattern, corners, cellSize }: RenderParams) => {
+  if (isFinderPattern) {
     return renderSquare(corners);
   }
   return renderCircle(corners.center, cellSize);
 };
 export const customRenderer: CustomRenderer = {
   render: {
-    [Kind.Circle]: (params) => render(params),
-    [Kind.Element]: (params) => render(params),
+    circle: (params) => render(params),
+    path: (params) => render(params),
   },
 };
 
 export default function App() {
   return (
     <View style={styles.root}>
-      <View style={styles.content}>
+      <View style={styles.row}>
         <QrCodeSvg
           style={styles.qr}
           value={CONTENT}
-          frameSize={SIZE}
-          contentCells={5}
-          content={<Text style={styles.icon}>👋</Text>}
-          contentStyle={styles.box}
-        />
-        <QrCodeSvg
-          style={styles.qr}
-          gradientColors={['#0800ff', '#ff0000']}
-          value={CONTENT}
-          frameSize={SIZE}
+          size={SIZE}
+          logo={{
+            source: <Text style={styles.icon}>👋</Text>,
+            cells: 5,
+            style: styles.box,
+          }}
         />
         <QrCodeSvg
           style={styles.qr}
           value={CONTENT}
-          frameSize={SIZE}
-          contentCells={5}
-          content={<Text style={styles.icon}>💻</Text>}
-          dotColor="#ffffff"
-          backgroundColor="#000000"
-          contentStyle={styles.box}
+          size={SIZE}
+          fill={{ type: 'gradient', colors: ['#0800ff', '#ff0000'] }}
         />
+        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="dots" />
+      </View>
+      <View style={styles.row}>
         <QrCodeSvg
           style={styles.qr}
-          renderer={{ ...plainRenderer, options: { padding: 0 } }}
           value={CONTENT}
-          frameSize={SIZE}
+          size={SIZE}
+          shape={customRenderer}
         />
-        <QrCodeSvg
-          style={styles.qr}
-          renderer={{ ...triangleRenderer, options: { padding: 0 } }}
-          value={CONTENT}
-          frameSize={SIZE}
-        />
-        <QrCodeSvg
-          style={styles.qr}
-          renderer={{ ...circleRenderer, options: { padding: 0 } }}
-          value={CONTENT}
-          frameSize={SIZE}
-        />
-        <QrCodeSvg
-          style={styles.qr}
-          renderer={customRenderer}
-          value={CONTENT}
-          frameSize={SIZE}
-        />
+        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} separated />
+        {/* No `size` - fills the wrapper's width and stays square via aspectRatio. */}
+        <View style={[styles.qr, styles.responsive]}>
+          <QrCodeSvg value={CONTENT} />
+        </View>
       </View>
     </View>
   );
@@ -92,9 +68,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  content: {
+  row: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -107,5 +82,8 @@ const styles = StyleSheet.create({
   },
   qr: {
     padding: 15,
+  },
+  responsive: {
+    width: SIZE,
   },
 });

@@ -1,4 +1,4 @@
-import { type Corners, type CustomRenderer, type Dot, Kind } from './types';
+import type { Corners, CustomRenderer, Dot } from './types';
 import { round } from './round';
 
 const pair = (d: Dot) => `${d.x} ${d.y}`;
@@ -6,16 +6,18 @@ const line = (d: Dot) => `L${pair(d)}`;
 
 export const plainRenderer: CustomRenderer = {
   render: {
-    [Kind.Circle]: ({ corners: c }) => renderSquare(c),
-    [Kind.Element]: ({ corners: c }) => renderSquare(c),
+    circle: ({ corners: c }) => renderSquare(c),
+    path: ({ corners: c }) => renderSquare(c),
+  },
+  options: {
+    gap: 0,
   },
 };
 
 export const defaultRenderer: CustomRenderer = {
   render: {
-    [Kind.Circle]: ({ corners, cellSize }) =>
-      renderCircle(corners.center, cellSize),
-    [Kind.Element]: ({ neighbors, corners }) => {
+    circle: ({ corners, cellSize }) => renderCircle(corners.center, cellSize),
+    path: ({ neighbors, corners }) => {
       const { q2, q3, q4, q1, d1, d2, d4, d3 } = corners;
       // q4  0  d1  0  q1
       // 0   0  0   0  0
@@ -46,25 +48,25 @@ export const defaultRenderer: CustomRenderer = {
 
 export const triangleRenderer: CustomRenderer = {
   render: {
-    [Kind.Circle]: ({ corners: c }) =>
+    circle: ({ corners: c }) =>
       `M${pair(c.d1)} ${line(c.d2)} ${line(c.d3)} ${line(c.d4)}`,
-    [Kind.Element]: ({ corners: c }) =>
+    path: ({ corners: c }) =>
       `M${pair(c.d1)} ${line(c.d2)} ${line(c.d3)} ${line(c.d4)}`,
   },
 };
 
 export const circleRenderer: CustomRenderer = {
   render: {
-    [Kind.Circle]: ({ corners, cellSize }) =>
-      renderCircle(corners.center, cellSize),
-    [Kind.Element]: ({ corners, cellSize }) =>
-      renderCircle(corners.center, cellSize),
+    circle: ({ corners, cellSize }) => renderCircle(corners.center, cellSize),
+    path: ({ corners, cellSize }) => renderCircle(corners.center, cellSize),
   },
 };
 
 export const renderCircle = (center: Dot, cellSize: number) => {
   const half = round(cellSize / 2);
-  return `M${center.x + half} ${center.y} A${half} ${half} 0 1 0 ${center.x - half} ${center.y} A${half} ${half} 0 1 0 ${center.x + half} ${center.y}`;
+  const right = round(center.x + half);
+  const left = round(center.x - half);
+  return `M${right} ${center.y} A${half} ${half} 0 1 0 ${left} ${center.y} A${half} ${half} 0 1 0 ${right} ${center.y}`;
 };
 
 export const renderSquare = (c: Corners) =>
