@@ -133,221 +133,223 @@ export type QrCodeSvgProps = {
   onError?: (error: Error) => void;
 };
 
-const QrCodeSvg = forwardRef<View, QrCodeSvgProps>(function QrCodeSvg(
-  {
-    value,
-    size,
-    errorCorrectionLevel = 'M',
-    backgroundColor = '#ffffff',
-    color = '#000000',
-    fill,
-    style,
-    shape = 'rounded',
-    gap,
-    separated,
-    moduleProps,
-    logo,
-    testID = 'qr-code',
-    onError,
-  },
-  ref
-) {
-  const hasErrorHandler = onError !== undefined;
+const QrCodeSvg = forwardRef<React.ComponentRef<typeof View>, QrCodeSvgProps>(
+  function QrCodeSvgImpl(
+    {
+      value,
+      size,
+      errorCorrectionLevel = 'M',
+      backgroundColor = '#ffffff',
+      color = '#000000',
+      fill,
+      style,
+      shape = 'rounded',
+      gap,
+      separated,
+      moduleProps,
+      logo,
+      testID = 'qr-code',
+      onError,
+    },
+    ref
+  ) {
+    const hasErrorHandler = onError !== undefined;
 
-  const matrixResult = useMemo(() => {
-    try {
-      return {
-        matrix: createMatrix(value, errorCorrectionLevel),
-        error: null as Error | null,
-      };
-    } catch (e) {
-      if (!hasErrorHandler) {
-        throw e;
+    const matrixResult = useMemo(() => {
+      try {
+        return {
+          matrix: createMatrix(value, errorCorrectionLevel),
+          error: null as Error | null,
+        };
+      } catch (e) {
+        if (!hasErrorHandler) {
+          throw e;
+        }
+        return {
+          matrix: null,
+          error: e instanceof Error ? e : new Error(String(e)),
+        };
       }
-      return {
-        matrix: null,
-        error: e instanceof Error ? e : new Error(String(e)),
-      };
-    }
-  }, [value, errorCorrectionLevel, hasErrorHandler]);
+    }, [value, errorCorrectionLevel, hasErrorHandler]);
 
-  useEffect(() => {
-    if (matrixResult.error) {
-      onError?.(matrixResult.error);
-    }
-  }, [matrixResult.error, onError]);
+    useEffect(() => {
+      if (matrixResult.error) {
+        onError?.(matrixResult.error);
+      }
+    }, [matrixResult.error, onError]);
 
-  const originalMatrix = matrixResult.matrix ?? EMPTY_MATRIX;
-  const matrixRowLength = originalMatrix[0]?.length ?? 0;
-  const logoCells = logo?.cells ?? 6;
-  const roundedContentCells =
-    (matrixRowLength - logoCells) % 2 === 0 ? logoCells : logoCells + 1;
-  const contentSize = roundedContentCells; // in matrix units (CELL_SIZE === 1)
-  const contentStartIndex = (matrixRowLength - roundedContentCells) / 2;
-  const contentEndIndex = contentStartIndex + roundedContentCells - 1;
-  const contentXY = contentStartIndex;
-  const contentSizePercent = round((contentSize / matrixRowLength) * 100);
-  const contentXYPercent = round((contentXY / matrixRowLength) * 100);
+    const originalMatrix = matrixResult.matrix ?? EMPTY_MATRIX;
+    const matrixRowLength = originalMatrix[0]?.length ?? 0;
+    const logoCells = logo?.cells ?? 6;
+    const roundedContentCells =
+      (matrixRowLength - logoCells) % 2 === 0 ? logoCells : logoCells + 1;
+    const contentSize = roundedContentCells; // in matrix units (CELL_SIZE === 1)
+    const contentStartIndex = (matrixRowLength - roundedContentCells) / 2;
+    const contentEndIndex = contentStartIndex + roundedContentCells - 1;
+    const contentXY = contentStartIndex;
+    const contentSizePercent = round((contentSize / matrixRowLength) * 100);
+    const contentXYPercent = round((contentXY / matrixRowLength) * 100);
 
-  const hasLogo = logo !== undefined;
-  const matrixInfo = useMemo(() => {
-    if (matrixResult.error) {
-      return {
-        matrix: EMPTY_MATRIX,
-        matrixFocusSquareDeep: 0,
-        error: null as Error | null,
-      };
-    }
-    const nextMatrix = hasLogo
-      ? originalMatrix.map((row, i) =>
-          row.map((el, j) =>
-            i >= contentStartIndex &&
-            i <= contentEndIndex &&
-            j >= contentStartIndex &&
-            j <= contentEndIndex
-              ? 0
-              : el
+    const hasLogo = logo !== undefined;
+    const matrixInfo = useMemo(() => {
+      if (matrixResult.error) {
+        return {
+          matrix: EMPTY_MATRIX,
+          matrixFocusSquareDeep: 0,
+          error: null as Error | null,
+        };
+      }
+      const nextMatrix = hasLogo
+        ? originalMatrix.map((row, i) =>
+            row.map((el, j) =>
+              i >= contentStartIndex &&
+              i <= contentEndIndex &&
+              j >= contentStartIndex &&
+              j <= contentEndIndex
+                ? 0
+                : el
+            )
           )
-        )
-      : originalMatrix;
-    let focusSquareDeepIndex = nextMatrix[0]?.findIndex((_) => _ === 0);
-    let error: Error | null = null;
-    if (focusSquareDeepIndex === undefined) {
-      const message = "Focus square wasn't detected";
-      if (__DEV__ && !hasErrorHandler) {
-        throw new Error(message);
+        : originalMatrix;
+      let focusSquareDeepIndex = nextMatrix[0]?.findIndex((_) => _ === 0);
+      let error: Error | null = null;
+      if (focusSquareDeepIndex === undefined) {
+        const message = "Focus square wasn't detected";
+        if (__DEV__ && !hasErrorHandler) {
+          throw new Error(message);
+        }
+        if (!hasErrorHandler) {
+          console.warn(message);
+        }
+        error = new Error(message);
+        focusSquareDeepIndex = 0;
       }
-      if (!hasErrorHandler) {
-        console.warn(message);
+      return {
+        matrix: nextMatrix,
+        matrixFocusSquareDeep: focusSquareDeepIndex,
+        error,
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+      matrixResult,
+      hasLogo,
+      contentStartIndex,
+      contentEndIndex,
+      hasErrorHandler,
+    ]);
+
+    useEffect(() => {
+      if (matrixInfo.error) {
+        onError?.(matrixInfo.error);
       }
-      error = new Error(message);
-      focusSquareDeepIndex = 0;
-    }
-    return {
-      matrix: nextMatrix,
-      matrixFocusSquareDeep: focusSquareDeepIndex,
-      error,
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    matrixResult,
-    hasLogo,
-    contentStartIndex,
-    contentEndIndex,
-    hasErrorHandler,
-  ]);
+    }, [matrixInfo.error, onError]);
 
-  useEffect(() => {
-    if (matrixInfo.error) {
-      onError?.(matrixInfo.error);
-    }
-  }, [matrixInfo.error, onError]);
+    const { matrix, matrixFocusSquareDeep } = matrixInfo;
 
-  const { matrix, matrixFocusSquareDeep } = matrixInfo;
+    const renderer = useMemo(
+      () => resolveRenderer(shape, gap, separated),
+      [shape, gap, separated]
+    );
 
-  const renderer = useMemo(
-    () => resolveRenderer(shape, gap, separated),
-    [shape, gap, separated]
-  );
+    const paths = useMemo(
+      () =>
+        matrix.flatMap((row, i) =>
+          row.flatMap((_, j) => {
+            if (!row?.[j]) {
+              return [];
+            }
+            const neighbors: Neighbors = {
+              top: Boolean(matrix[i - 1]?.[j]),
+              bottom: Boolean(matrix[i + 1]?.[j]),
+              left: Boolean(row[j - 1]),
+              right: Boolean(row[j + 1]),
+            };
+            const x = j * CELL_SIZE;
+            const y = i * CELL_SIZE;
+            return [
+              renderFigure(
+                x,
+                y,
+                neighbors,
+                CELL_SIZE,
+                renderer,
+                matrixFocusSquareDeep,
+                i,
+                j,
+                matrix.length
+              ),
+            ];
+          })
+        ),
+      [matrix, renderer, matrixFocusSquareDeep]
+    );
 
-  const paths = useMemo(
-    () =>
-      matrix.flatMap((row, i) =>
-        row.flatMap((_, j) => {
-          if (!row?.[j]) {
-            return [];
-          }
-          const neighbors: Neighbors = {
-            top: Boolean(matrix[i - 1]?.[j]),
-            bottom: Boolean(matrix[i + 1]?.[j]),
-            left: Boolean(row[j - 1]),
-            right: Boolean(row[j + 1]),
-          };
-          const x = j * CELL_SIZE;
-          const y = i * CELL_SIZE;
-          return [
-            renderFigure(
-              x,
-              y,
-              neighbors,
-              CELL_SIZE,
-              renderer,
-              matrixFocusSquareDeep,
-              i,
-              j,
-              matrix.length
-            ),
-          ];
-        })
-      ),
-    [matrix, renderer, matrixFocusSquareDeep]
-  );
-
-  const { dPath, dCircle } = useMemo(() => {
-    const pathParts: string[] = [];
-    const circleParts: string[] = [];
-    for (const figure of paths) {
-      if (figure.type === 'path') {
-        pathParts.push(figure.d);
-      } else {
-        circleParts.push(figure.d);
+    const { dPath, dCircle } = useMemo(() => {
+      const pathParts: string[] = [];
+      const circleParts: string[] = [];
+      for (const figure of paths) {
+        if (figure.type === 'path') {
+          pathParts.push(figure.d);
+        } else {
+          circleParts.push(figure.d);
+        }
       }
+      return { dPath: pathParts.join(' '), dCircle: circleParts.join(' ') };
+    }, [paths]);
+
+    if (matrixResult.matrix === null) {
+      return null;
     }
-    return { dPath: pathParts.join(' '), dCircle: circleParts.join(' ') };
-  }, [paths]);
 
-  if (matrixResult.matrix === null) {
-    return null;
-  }
+    return (
+      <View
+        ref={ref}
+        testID={testID}
+        style={[
+          styles.root,
+          size !== undefined ? { width: size, height: size } : null,
+          { backgroundColor },
+          style,
+        ]}
+      >
+        <View style={styles.inner}>
+          <QrSvg
+            viewBoxSize={matrixRowLength}
+            dPath={dPath}
+            dCircle={dCircle}
+            moduleProps={moduleProps}
+            backgroundColor={backgroundColor}
+            contentXY={contentXY}
+            contentSize={contentSize}
+            hasLogo={hasLogo}
+            logoBackgroundProps={logo?.backgroundProps}
+            fill={fill}
+            color={color}
+            testIDBase={testID}
+          />
 
-  return (
-    <View
-      ref={ref}
-      testID={testID}
-      style={[
-        styles.root,
-        size !== undefined ? { width: size, height: size } : null,
-        { backgroundColor },
-        style,
-      ]}
-    >
-      <View style={styles.inner}>
-        <QrSvg
-          viewBoxSize={matrixRowLength}
-          dPath={dPath}
-          dCircle={dCircle}
-          moduleProps={moduleProps}
-          backgroundColor={backgroundColor}
-          contentXY={contentXY}
-          contentSize={contentSize}
-          hasLogo={hasLogo}
-          logoBackgroundProps={logo?.backgroundProps}
-          fill={fill}
-          color={color}
-          testIDBase={testID}
-        />
-
-        {logo && (
-          <View
-            testID={`${testID}-content`}
-            style={[
-              {
-                width: `${contentSizePercent}%`,
-                height: `${contentSizePercent}%`,
-                top: `${contentXYPercent}%`,
-                left: `${contentXYPercent}%`,
-              },
-              styles.content,
-              logo.style,
-            ]}
-          >
-            {logo.source}
-          </View>
-        )}
+          {logo && (
+            <View
+              testID={`${testID}-content`}
+              style={[
+                {
+                  width: `${contentSizePercent}%`,
+                  height: `${contentSizePercent}%`,
+                  top: `${contentXYPercent}%`,
+                  left: `${contentXYPercent}%`,
+                },
+                styles.content,
+                logo.style,
+              ]}
+            >
+              {logo.source}
+            </View>
+          )}
+        </View>
       </View>
-    </View>
-  );
-});
+    );
+  }
+);
 
 export default QrCodeSvg;
 

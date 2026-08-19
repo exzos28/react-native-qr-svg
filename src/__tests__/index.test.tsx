@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
 import { Button, StyleSheet, Text } from 'react-native';
 import QrCodeSvg from '../QrCodeSvg';
@@ -11,7 +12,8 @@ import { nanoid } from 'nanoid/non-secure';
 jest.useFakeTimers();
 
 jest.mock('../renderFigure', () => {
-  const actual = jest.requireActual('../renderFigure');
+  const actual =
+    jest.requireActual<typeof import('../renderFigure')>('../renderFigure');
   return {
     __esModule: true,
     default: jest.fn(actual.default),
@@ -19,7 +21,8 @@ jest.mock('../renderFigure', () => {
 });
 
 jest.mock('../createMatrix', () => {
-  const actual = jest.requireActual('../createMatrix');
+  const actual =
+    jest.requireActual<typeof import('../createMatrix')>('../createMatrix');
   return {
     __esModule: true,
     createMatrix: jest.fn(actual.createMatrix),
@@ -27,7 +30,8 @@ jest.mock('../createMatrix', () => {
 });
 
 jest.mock('nanoid/non-secure', () => {
-  const actual = jest.requireActual('nanoid/non-secure');
+  const actual =
+    jest.requireActual<typeof import('nanoid/non-secure')>('nanoid/non-secure');
   return {
     __esModule: true,
     nanoid: jest.fn(actual.nanoid),
@@ -43,14 +47,14 @@ const nanoidSpy = nanoid as jest.Mock;
 const TOO_LONG_VALUE = 'A'.repeat(5000);
 
 describe('QrCodeSvg', () => {
-  it('renders correctly with default props', () => {
-    const { getByTestId } = render(<QrCodeSvg value="Test" size={200} />);
+  it('renders correctly with default props', async () => {
+    const { getByTestId } = await render(<QrCodeSvg value="Test" size={200} />);
     const svg = getByTestId('qr-code-svg');
     expect(svg).toBeDefined();
   });
 
-  it('renders logo correctly', () => {
-    const { getByTestId } = render(
+  it('renders logo correctly', async () => {
+    const { getByTestId } = await render(
       <QrCodeSvg
         value="Test"
         size={200}
@@ -61,8 +65,8 @@ describe('QrCodeSvg', () => {
     expect(content).toBeDefined();
   });
 
-  it('renders without an explicit size, filling its container via aspectRatio', () => {
-    const { getByTestId } = render(<QrCodeSvg value="Test" />);
+  it('renders without an explicit size, filling its container via aspectRatio', async () => {
+    const { getByTestId } = await render(<QrCodeSvg value="Test" />);
     const root = getByTestId('qr-code');
     const style = StyleSheet.flatten(root.props.style);
     expect(style.aspectRatio).toBe(1);
@@ -73,16 +77,16 @@ describe('QrCodeSvg', () => {
     expect(svg.props.height).toBe('100%');
   });
 
-  it('applies an explicit width/height when size is given', () => {
-    const { getByTestId } = render(<QrCodeSvg value="Test" size={200} />);
+  it('applies an explicit width/height when size is given', async () => {
+    const { getByTestId } = await render(<QrCodeSvg value="Test" size={200} />);
     const root = getByTestId('qr-code');
     const style = StyleSheet.flatten(root.props.style);
     expect(style.width).toBe(200);
     expect(style.height).toBe(200);
   });
 
-  it('renders background color correctly', () => {
-    const { getByTestId } = render(
+  it('renders background color correctly', async () => {
+    const { getByTestId } = await render(
       <QrCodeSvg value="Test" size={200} backgroundColor="blue" />
     );
     const root = getByTestId('qr-code');
@@ -90,8 +94,8 @@ describe('QrCodeSvg', () => {
     expect(style.backgroundColor).toBe('blue');
   });
 
-  it('renders color correctly', () => {
-    const { getAllByTestId } = render(
+  it('renders color correctly', async () => {
+    const { getAllByTestId } = await render(
       <QrCodeSvg value="Test" size={200} color="red" />
     );
     const modules = getAllByTestId('qr-code-module');
@@ -99,8 +103,8 @@ describe('QrCodeSvg', () => {
     expect(allEqual).toBe(true);
   });
 
-  it('renders gradient fill correctly', () => {
-    const { getByTestId } = render(
+  it('renders gradient fill correctly', async () => {
+    const { getByTestId } = await render(
       <QrCodeSvg
         value="Test"
         size={200}
@@ -111,22 +115,29 @@ describe('QrCodeSvg', () => {
     expect(svg).toBeDefined();
   });
 
-  it('renders 3+ stop gradients', () => {
-    const { UNSAFE_getAllByType } = render(
+  it('renders 3+ stop gradients', async () => {
+    const { container } = await render(
       <QrCodeSvg
         value="Test"
         size={200}
         fill={{ type: 'gradient', colors: ['red', 'green', 'blue'] }}
       />
     );
-    const { Stop } = jest.requireActual('react-native-svg');
-    const stops = UNSAFE_getAllByType(Stop);
-    expect(stops).toHaveLength(3);
-    expect(stops.map((s: any) => s.props.offset)).toEqual(['0', '0.5', '1']);
+    // <Stop> is a JS-only virtual component - react-native-svg flattens all
+    // of a gradient's stops into a single `gradient` prop
+    // ([offset, color, offset, color, ...]) on the native LinearGradient
+    // host view, so there's no separate host instance per stop to query.
+    const [gradientNode] = container.queryAll(
+      (i) => i.type === 'RNSVGLinearGradient'
+    );
+    const offsets = (gradientNode?.props.gradient as number[]).filter(
+      (_, i) => i % 2 === 0
+    );
+    expect(offsets).toEqual([0, 0.5, 1]);
   });
 
-  it('renders logo size correctly', () => {
-    const { getByTestId } = render(
+  it('renders logo size correctly', async () => {
+    const { getByTestId } = await render(
       <QrCodeSvg
         value="Test"
         size={200}
@@ -139,22 +150,22 @@ describe('QrCodeSvg', () => {
     expect(style.height).toBe('23.8%');
   });
 
-  it('does not recompute figures when an unrelated prop changes', () => {
+  it('does not recompute figures when an unrelated prop changes', async () => {
     renderFigureSpy.mockClear();
-    const { rerender } = render(
+    const { rerender } = await render(
       <QrCodeSvg value="Test" size={200} color="red" />
     );
     const callsAfterMount = renderFigureSpy.mock.calls.length;
     expect(callsAfterMount).toBeGreaterThan(0);
 
-    rerender(<QrCodeSvg value="Test" size={200} color="blue" />);
+    await rerender(<QrCodeSvg value="Test" size={200} color="blue" />);
 
     expect(renderFigureSpy.mock.calls.length).toBe(callsAfterMount);
   });
 
-  it('does not recompute figures when a new inline logo element is passed', () => {
+  it('does not recompute figures when a new inline logo element is passed', async () => {
     renderFigureSpy.mockClear();
-    const { rerender } = render(
+    const { rerender } = await render(
       <QrCodeSvg
         value="Test"
         size={200}
@@ -165,7 +176,7 @@ describe('QrCodeSvg', () => {
     expect(callsAfterMount).toBeGreaterThan(0);
 
     // a new element instance, but same "logo is present" state
-    rerender(
+    await rerender(
       <QrCodeSvg
         value="Test"
         size={200}
@@ -176,7 +187,7 @@ describe('QrCodeSvg', () => {
     expect(renderFigureSpy.mock.calls.length).toBe(callsAfterMount);
   });
 
-  it('generates the gradient id only once, regardless of re-renders', () => {
+  it('generates the gradient id only once, regardless of re-renders', async () => {
     nanoidSpy.mockClear();
 
     function Wrapper() {
@@ -198,11 +209,11 @@ describe('QrCodeSvg', () => {
       );
     }
 
-    const { getByTestId } = render(<Wrapper />);
+    const { getByTestId } = await render(<Wrapper />);
     expect(nanoidSpy).toHaveBeenCalledTimes(1);
 
-    fireEvent.press(getByTestId('toggle'));
-    fireEvent.press(getByTestId('toggle'));
+    await fireEvent.press(getByTestId('toggle'));
+    await fireEvent.press(getByTestId('toggle'));
 
     expect(nanoidSpy).toHaveBeenCalledTimes(1);
   });
@@ -248,27 +259,27 @@ describe('QrCodeSvg', () => {
   });
 
   describe('onError', () => {
-    it('throws uncaught when the value cannot be encoded and no onError is given', () => {
-      expect(() =>
+    it('throws uncaught when the value cannot be encoded and no onError is given', async () => {
+      await expect(
         render(<QrCodeSvg value={TOO_LONG_VALUE} size={200} />)
-      ).toThrow();
+      ).rejects.toThrow();
     });
 
-    it('reports encode failures via onError instead of throwing', () => {
+    it('reports encode failures via onError instead of throwing', async () => {
       const onError = jest.fn();
-      const { queryByTestId } = render(
+      const { queryByTestId } = await render(
         <QrCodeSvg value={TOO_LONG_VALUE} size={200} onError={onError} />
       );
 
       expect(onError).toHaveBeenCalledTimes(1);
-      expect(onError.mock.calls[0][0]).toBeInstanceOf(Error);
+      expect(onError.mock.calls[0]?.[0]).toBeInstanceOf(Error);
       expect(queryByTestId('qr-code')).toBeNull();
     });
 
-    it('reports the finder-pattern edge case via onError without throwing', () => {
+    it('reports the finder-pattern edge case via onError without throwing', async () => {
       createMatrixSpy.mockReturnValueOnce([]);
       const onError = jest.fn();
-      const { getByTestId } = render(
+      const { getByTestId } = await render(
         <QrCodeSvg value="Test" size={200} onError={onError} />
       );
 
@@ -276,8 +287,10 @@ describe('QrCodeSvg', () => {
       expect(getByTestId('qr-code')).toBeDefined();
     });
 
-    it('does not change default rendering when onError is omitted', () => {
-      const { getByTestId } = render(<QrCodeSvg value="Test" size={200} />);
+    it('does not change default rendering when onError is omitted', async () => {
+      const { getByTestId } = await render(
+        <QrCodeSvg value="Test" size={200} />
+      );
       expect(getByTestId('qr-code-svg')).toBeDefined();
     });
   });

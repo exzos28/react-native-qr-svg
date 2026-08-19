@@ -1,4 +1,4 @@
-import React from 'react';
+import { describe, expect, it, jest } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 import QrCodeSvg from '../QrCodeSvg';
 
@@ -18,23 +18,23 @@ describe('QrCodeSvg path computation performance', () => {
   const value = 'A'.repeat(2900);
   const iterations = 20;
 
-  it('reports average render time for a large QR code', () => {
+  it('reports average render time for a large QR code', async () => {
     // warm up (JIT, module resolution, etc.)
     for (let i = 0; i < 3; i++) {
-      const { unmount } = render(
+      const { unmount } = await render(
         <QrCodeSvg value={value} size={800} errorCorrectionLevel="L" />
       );
-      unmount();
+      await unmount();
     }
 
     const samples: number[] = [];
     for (let i = 0; i < iterations; i++) {
       const start = performance.now();
-      const { unmount } = render(
+      const { unmount } = await render(
         <QrCodeSvg value={value} size={800} errorCorrectionLevel="L" />
       );
       samples.push(performance.now() - start);
-      unmount();
+      await unmount();
     }
 
     const total = samples.reduce((a, b) => a + b, 0);
