@@ -34,7 +34,7 @@ This library allows for easy customization of QR codes, enabling developers to a
 | `fill`                  | Solid color or gradient fill for the modules. Overrides `color`.           | `ColorValue \| GradientFill`     |                |
 | `style`                 | Style for the container of the QR code.                                    | `StyleProp<ViewStyle>`           |                |
 | `shape`                 | Built-in shape preset, or a fully custom renderer.                         | `'rounded' \| 'square' \| 'dots' \| 'triangle' \| CustomRenderer` | `'rounded'`    |
-| `gap`                   | Gap between a module and its unconnected neighbors, as a fraction of one module (e.g. `0.05` = 5%). | `number` | shape-specific |
+| `gap`                   | Gap between a module and its unconnected neighbors, as a fraction of one module (e.g. `0.01` = 1%). | `number` | shape-specific |
 | `separated`             | Apply `gap` between every module, including connected ones (a visible grid line), instead of only unconnected ones. | `boolean` | `false` |
 | `moduleProps`           | Props applied to the two underlying SVG paths that draw the modules.       | `PathProps`                      |                |
 | `logo`                  | Logo/content rendered in the middle of the QR code.                        | `LogoConfig`                     |                |
@@ -126,21 +126,15 @@ export default function App() {
           size={SIZE}
           fill={{ type: 'gradient', colors: ['#0800ff', '#ff0000'] }}
         />
-        <QrCodeSvg
-          style={styles.qr}
-          value={CONTENT}
-          size={SIZE}
-          logo={{ source: <Text style={styles.icon}>💻</Text>, cells: 5, style: styles.box }}
-          color="#ffffff"
-          backgroundColor="#000000"
-        />
-        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="square" />
+        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="dots" />
       </View>
       <View style={styles.row}>
-        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="triangle" />
-        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="dots" />
         <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape={customRenderer} />
-        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} separated gap={0.05} />
+        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} separated />
+        {/* No `size` - fills the wrapper's width and stays square via aspectRatio. */}
+        <View style={[styles.qr, styles.responsive]}>
+          <QrCodeSvg value={CONTENT} />
+        </View>
       </View>
     </View>
   );
@@ -166,6 +160,9 @@ const styles = StyleSheet.create({
   },
   qr: {
     padding: 15,
+  },
+  responsive: {
+    width: SIZE,
   },
 });
 ```
