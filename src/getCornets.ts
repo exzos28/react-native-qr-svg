@@ -20,38 +20,30 @@ export default function getCorners(
   // d4  0  0   0  d2
   // 0   0  0   0  0
   // q3  0  d3  0  q2
-  const q1 = {
-    x: x + cellSize - padding,
-    y: y + padding,
-  };
-  const q2 = {
-    x: x + cellSize - padding,
-    y: y + cellSize - padding,
-  };
-  const q3 = {
-    x: x + padding,
-    y: y + cellSize - padding,
-  };
-  const q4 = {
-    x: x + padding,
-    y: y + padding,
-  };
-  const center = { x: x + half, y: y + half };
+  const left = round(x + padding);
+  const right = round(x + cellSize - padding);
+  const top = round(y + padding);
+  const bottom = round(y + cellSize - padding);
+  const q1 = { x: right, y: top };
+  const q2 = { x: right, y: bottom };
+  const q3 = { x: left, y: bottom };
+  const q4 = { x: left, y: top };
+  const center = { x: round(x + half), y: round(y + half) };
 
   const d1 = {
     x: center.x,
-    y: center.y - half + padding,
+    y: round(center.y - half + padding),
   };
   const d2 = {
-    x: center.x + half - padding,
+    x: round(center.x + half - padding),
     y: center.y,
   };
   const d3 = {
     x: center.x,
-    y: center.y + half - padding,
+    y: round(center.y + half - padding),
   };
   const d4 = {
-    x: center.x - half + padding,
+    x: round(center.x - half + padding),
     y: center.y,
   };
 

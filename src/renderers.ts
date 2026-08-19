@@ -64,7 +64,9 @@ export const circleRenderer: CustomRenderer = {
 
 export const renderCircle = (center: Dot, cellSize: number) => {
   const half = round(cellSize / 2);
-  return `M${center.x + half} ${center.y} A${half} ${half} 0 1 0 ${center.x - half} ${center.y} A${half} ${half} 0 1 0 ${center.x + half} ${center.y}`;
+  const right = round(center.x + half);
+  const left = round(center.x - half);
+  return `M${right} ${center.y} A${half} ${half} 0 1 0 ${left} ${center.y} A${half} ${half} 0 1 0 ${right} ${center.y}`;
 };
 
 export const renderSquare = (c: Corners) =>
