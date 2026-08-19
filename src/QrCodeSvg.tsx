@@ -40,13 +40,21 @@ const SHAPE_RENDERERS: Record<QrShapeName, CustomRenderer> = {
 
 function resolveRenderer(
   shape: QrShapeName | CustomRenderer,
-  gap: number | undefined
+  gap: number | undefined,
+  separated: boolean | undefined
 ): CustomRenderer {
   const base = typeof shape === 'string' ? SHAPE_RENDERERS[shape] : shape;
-  if (gap === undefined) {
+  if (gap === undefined && separated === undefined) {
     return base;
   }
-  return { ...base, options: { ...base.options, gap } };
+  return {
+    ...base,
+    options: {
+      ...base.options,
+      ...(gap !== undefined ? { gap } : null),
+      ...(separated !== undefined ? { separated } : null),
+    },
+  };
 }
 
 export type GradientFill = {
@@ -88,6 +96,8 @@ export type QrCodeSvgProps = {
   shape?: QrShapeName | CustomRenderer;
   /** Gap between a module and its unconnected neighbors. Overrides the shape's own default. */
   gap?: number;
+  /** Apply `gap` between every module, including connected ones, instead of only unconnected ones. */
+  separated?: boolean;
   /** Props applied to the two underlying SVG paths that draw the modules. */
   moduleProps?: PathProps;
   /** Logo/content rendered in the middle of the QR code. */
@@ -115,6 +125,7 @@ const QrCodeSvg = forwardRef<View, QrCodeSvgProps>(function QrCodeSvg(
     style,
     shape = 'rounded',
     gap,
+    separated,
     moduleProps,
     logo,
     testID = 'qr-code',
@@ -214,7 +225,10 @@ const QrCodeSvg = forwardRef<View, QrCodeSvgProps>(function QrCodeSvg(
 
   const { matrix, matrixFocusSquareDeep } = matrixInfo;
 
-  const renderer = useMemo(() => resolveRenderer(shape, gap), [shape, gap]);
+  const renderer = useMemo(
+    () => resolveRenderer(shape, gap, separated),
+    [shape, gap, separated]
+  );
 
   const paths = useMemo(
     () =>

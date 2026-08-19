@@ -35,6 +35,7 @@ This library allows for easy customization of QR codes, enabling developers to a
 | `style`                 | Style for the container of the QR code.                                    | `StyleProp<ViewStyle>`           |                |
 | `shape`                 | Built-in shape preset, or a fully custom renderer.                         | `'rounded' \| 'square' \| 'dots' \| 'triangle' \| CustomRenderer` | `'rounded'`    |
 | `gap`                   | Gap between a module and its unconnected neighbors.                        | `number`                         | shape-specific |
+| `separated`             | Apply `gap` between every module, including connected ones (a visible grid line), instead of only unconnected ones. | `boolean` | `false` |
 | `moduleProps`           | Props applied to the two underlying SVG paths that draw the modules.       | `PathProps`                      |                |
 | `logo`                  | Logo/content rendered in the middle of the QR code.                        | `LogoConfig`                     |                |
 | `testID`                | Base testID; sub-elements are suffixed (`-svg`, `-module`, `-content`).    | `string`                         | `'qr-code'`    |
@@ -170,7 +171,7 @@ v2.0.0 is a full API redesign — every prop below was renamed, consolidated, or
 | —                                                              | `onError` (new, see above)                                          |
 | —                                                              | `ref` now forwards to the root `View`                                |
 
-Also fixed in v2: adjacent filled modules used to have a small persistent gap between them (visible as hairline cracks in solid blocks like the finder patterns) regardless of the shape's rounding — modules with a neighbor now sit flush against it.
+Also fixed in v2: adjacent filled modules used to have a small persistent, uneven gap between them (visible as hairline cracks in solid blocks like the finder patterns) regardless of the shape's rounding — modules with a neighbor now sit flush against it by default. Pass `separated` if you deliberately want a visible grid line between every module — it now renders as a straight, consistent line instead of the old uneven one.
 
 ## Contributing 🤝
 

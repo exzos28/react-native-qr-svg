@@ -20,7 +20,8 @@ export default function renderFigure(
   matrixSize: number
 ): Figure {
   const gap = renderer.options?.gap ?? DEFAULT_GAP;
-  const corners = getCorners(x, y, cellSize, gap, neighbors);
+  const separated = renderer.options?.separated ?? false;
+  const corners = getCorners(x, y, cellSize, gap, neighbors, separated);
   const finderPattern = isFinderPattern(
     i,
     j,

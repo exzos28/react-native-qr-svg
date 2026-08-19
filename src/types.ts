@@ -36,6 +36,8 @@ export type CustomRenderer = {
   render: Record<'circle' | 'path', (params: RenderParams) => string>;
   options?: {
     gap?: number;
+    /** Inset every side by `gap`, even between connected modules. */
+    separated?: boolean;
   };
 };
 

@@ -3,6 +3,7 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { Button, StyleSheet, Text } from 'react-native';
 import QrCodeSvg from '../QrCodeSvg';
 import getCorners from '../getCornets';
+import { round } from '../round';
 import * as renderFigureModule from '../renderFigure';
 import * as createMatrixModule from '../createMatrix';
 import { nanoid } from 'nanoid/non-secure';
@@ -209,6 +210,21 @@ describe('QrCodeSvg', () => {
     // being straight.
     expect(cellA.d2.x).toBe(cellA.q1.x);
     expect(cellB.d4.x).toBe(cellB.q4.x);
+  });
+
+  it('separated: true reintroduces a straight, consistent gap between connected modules', () => {
+    const cellSize = 6.66;
+    const gap = 0.1;
+    const neighbors = { top: false, right: true, bottom: false, left: false };
+    const cellA = getCorners(0, 0, cellSize, gap, neighbors, true);
+    const cellB = getCorners(cellSize, 0, cellSize, gap, neighbors, true);
+
+    // both cells recess by `gap` on their shared side...
+    expect(cellA.q1.x).toBe(round(cellSize - gap));
+    expect(cellB.q4.x).toBe(round(cellSize + gap));
+    // ...and the edge midpoint stays on the same line as the corners, so
+    // the gap reads as one straight line rather than a zigzag.
+    expect(cellA.d2.x).toBe(cellA.q1.x);
   });
 
   describe('onError', () => {
