@@ -1,10 +1,10 @@
-import { type CustomRenderer, Kind, type Neighbors } from './types';
+import type { CustomRenderer, Neighbors } from './types';
 import getCorners from './getCornets';
-import { DEFAULT_PADDING } from './constants';
-import isFocusSquareElem from './isFocusSquareElem';
+import { DEFAULT_GAP } from './constants';
+import isFinderPattern from './isFinderPattern';
 
 export type Figure = {
-  type: string;
+  type: 'circle' | 'path';
   d: string;
 };
 
@@ -19,9 +19,9 @@ export default function renderFigure(
   j: number,
   matrixSize: number
 ): Figure {
-  const padding = renderer.options?.padding ?? DEFAULT_PADDING;
-  const corners = getCorners(x, y, cellSize, padding);
-  const isSquareElem = isFocusSquareElem(
+  const gap = renderer.options?.gap ?? DEFAULT_GAP;
+  const corners = getCorners(x, y, cellSize, gap, neighbors);
+  const finderPattern = isFinderPattern(
     i,
     j,
     matrixSize,
@@ -31,22 +31,25 @@ export default function renderFigure(
     neighbors,
     corners,
     cellSize,
-    padding,
-    isSquareElem,
+    gap,
+    isFinderPattern: finderPattern,
     i,
     j,
   };
-  if (
-    !(neighbors.top || neighbors.right || neighbors.bottom || neighbors.left)
-  ) {
+  if (!(
+    neighbors.top ||
+    neighbors.right ||
+    neighbors.bottom ||
+    neighbors.left
+  )) {
     return {
       type: 'circle',
-      d: renderer.render[Kind.Circle](params),
+      d: renderer.render.circle(params),
     };
   }
 
   return {
     type: 'path',
-    d: renderer.render[Kind.Element](params),
+    d: renderer.render.path(params),
   };
 }

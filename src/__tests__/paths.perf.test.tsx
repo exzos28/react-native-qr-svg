@@ -22,7 +22,7 @@ describe('QrCodeSvg path computation performance', () => {
     // warm up (JIT, module resolution, etc.)
     for (let i = 0; i < 3; i++) {
       const { unmount } = render(
-        <QrCodeSvg value={value} frameSize={800} errorCorrectionLevel="L" />
+        <QrCodeSvg value={value} size={800} errorCorrectionLevel="L" />
       );
       unmount();
     }
@@ -31,7 +31,7 @@ describe('QrCodeSvg path computation performance', () => {
     for (let i = 0; i < iterations; i++) {
       const start = performance.now();
       const { unmount } = render(
-        <QrCodeSvg value={value} frameSize={800} errorCorrectionLevel="L" />
+        <QrCodeSvg value={value} size={800} errorCorrectionLevel="L" />
       );
       samples.push(performance.now() - start);
       unmount();

@@ -1,8 +1,9 @@
-import QRCode, { type QRCodeErrorCorrectionLevel } from 'qrcode';
+import QRCode from 'qrcode';
+import type { ErrorCorrectionLevel } from './types';
 
 export function createMatrix(
   value: string,
-  errorCorrectionLevel: QRCodeErrorCorrectionLevel
+  errorCorrectionLevel: ErrorCorrectionLevel
 ): number[][] {
   const arr = QRCode.create(value, {
     errorCorrectionLevel: errorCorrectionLevel,

@@ -16,7 +16,7 @@ This library provides a straightforward way to generate QR codes within React Na
 
 ## Customization 🎨
 
-This library allows for easy customization of QR codes, enabling developers to adjust dot color, background color, frame size, and content within the code.
+This library allows for easy customization of QR codes, enabling developers to adjust module color, gradient fill, shape, background color, size, and a logo overlay.
 
 ## Example 🖼️
 
@@ -24,41 +24,76 @@ This library allows for easy customization of QR codes, enabling developers to a
 
 ## Props
 
-| Property                    | Description                                                  | Type                                         | Default Value     |
-|-----------------------------|--------------------------------------------------------------|----------------------------------------------|-------------------|
-| `value`                     | The string to be converted into a QR code.                   | `string`                                     | (Required)        |
-| `frameSize`                 | The size of the frame in which the QR code will fit.         | `number`                                     | (Required)        |
-| `contentCells`              | The number of content cells in the QR code.                  | `number`                                     | `6`               |
-| `errorCorrectionLevel`      | The error correction level for the QR code.                  | `low, medium, quartile, high, L, M, Q, H, M` | `M`                |
-| `backgroundColor`          | The background color of the QR code.                        | `string`                                     | `'#ffffff'`       |
-| `dotColor`                  | The color of the dots (circles) in the QR code.             | `string`                                     | `'#000000'`       |
-| `style`                     | Style for the container of the QR code.                     | `StyleProp<ViewStyle>`                       |                   |
-| `contentBackgroundRectProps`| Props for the background rectangle of the QR code content.  | `RectProps`                                  |                   |
-| `content`                   | Additional content to be rendered within the QR code.       | `React.ReactNode`                            |                   |
-| `contentStyle`              | Style for the additional content within the QR code.        | `StyleProp<ViewStyle>`                       |                   |
-| `figureCircleProps`         | Props for the circular figures within the QR code.          | `CircleProps`                                |                   |
-| `figurePathProps`           | Props for the path figures within the QR code.              | `PathProps`                                  |                   |
-| `renderer`                  | Custom renderer for rendering QR code figures.              | `CustomRenderer`                             | `defaultRenderer` |
-| `gradientColors`            | Array of colors for gradient fill of the QR code.           | `ColorValue[]`                               |                   |
-| `gradientProps`             | Props for configuring the gradient of the QR code.          | `LinearGradientProps`                        |                   |
+| Property               | Description                                                                | Type                            | Default Value |
+|-------------------------|-----------------------------------------------------------------------------|----------------------------------|----------------|
+| `value`                 | The string to be converted into a QR code.                                 | `string`                         | (Required)     |
+| `size`                  | The size of the frame in which the QR code will fit.                       | `number`                         | (Required)     |
+| `errorCorrectionLevel`  | The error correction level for the QR code.                                | `'L' \| 'M' \| 'Q' \| 'H'`       | `'M'`          |
+| `backgroundColor`       | The background color of the QR code.                                       | `string`                         | `'#ffffff'`    |
+| `color`                 | The color of the QR code's modules.                                        | `string`                         | `'#000000'`    |
+| `fill`                  | Solid color or gradient fill for the modules. Overrides `color`.           | `ColorValue \| GradientFill`     |                |
+| `style`                 | Style for the container of the QR code.                                    | `StyleProp<ViewStyle>`           |                |
+| `shape`                 | Built-in shape preset, or a fully custom renderer.                         | `'rounded' \| 'square' \| 'dots' \| 'triangle' \| CustomRenderer` | `'rounded'`    |
+| `gap`                   | Gap between a module and its unconnected neighbors.                        | `number`                         | shape-specific |
+| `moduleProps`           | Props applied to the two underlying SVG paths that draw the modules.       | `PathProps`                      |                |
+| `logo`                  | Logo/content rendered in the middle of the QR code.                        | `LogoConfig`                     |                |
+| `testID`                | Base testID; sub-elements are suffixed (`-svg`, `-module`, `-content`).    | `string`                         | `'qr-code'`    |
+| `onError`               | Called instead of throwing on a generation failure. See below.             | `(error: Error) => void`         |                |
 
+`GradientFill`:
+
+| Property | Description                                    | Type              | Default Value |
+|----------|-------------------------------------------------|-------------------|----------------|
+| `type`   | Discriminant, always `'gradient'`.              | `'gradient'`      | (Required)     |
+| `colors` | 2 or more colors, distributed evenly.           | `ColorValue[]`     | (Required)     |
+| ...      | Any other `LinearGradientProps` (`x1`, `y1`, ...) from `react-native-svg`. |  |  |
+
+`LogoConfig`:
+
+| Property          | Description                                              | Type                    | Default Value |
+|--------------------|-----------------------------------------------------------|--------------------------|----------------|
+| `source`           | Content rendered in the middle of the QR code.            | `React.ReactNode`        | (Required)     |
+| `cells`            | How many modules wide/tall the cleared area behind it is. | `number`                 | `6`            |
+| `style`            | Style for the logo's container.                           | `StyleProp<ViewStyle>`   |                |
+| `backgroundProps`  | Props for the SVG rect drawn behind the logo.              | `RectProps`              |                |
+
+### Error handling
+
+By default, `QrCodeSvg` throws when it can't produce a QR code (for example, `value` is too long for the chosen `errorCorrectionLevel`) — in `__DEV__` this is an immediate crash so the problem is obvious during development; in production it falls back safely and warns via `console.warn` where possible.
+
+Pass `onError` to take over that behavior yourself instead — the component then never throws, in any environment, and calls `onError(error)` when generation fails:
+
+```tsx
+<QrCodeSvg
+  value={value}
+  size={200}
+  onError={(error) => reportToCrashlytics(error)}
+/>
+```
 
 ## Example 🛠️
 
 Implement QR codes easily in your React Native app:
 
 [Full example use can find here.](./example/src/App.tsx)
-```js
+```tsx
 import React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import {
-  QrCodeSvg,
-  plainRenderer,
-} from 'react-native-qr-svg';
+import { QrCodeSvg, renderCircle, renderSquare, type CustomRenderer, type RenderParams } from 'react-native-qr-svg';
 
 const SIZE = 170;
 const CONTENT = 'Hello world!';
+
+const render = ({ isFinderPattern, corners, cellSize }: RenderParams) =>
+  isFinderPattern ? renderSquare(corners) : renderCircle(corners.center, cellSize);
+
+const customRenderer: CustomRenderer = {
+  render: {
+    circle: render,
+    path: render,
+  },
+};
 
 export default function App() {
   return (
@@ -67,39 +102,25 @@ export default function App() {
         <QrCodeSvg
           style={styles.qr}
           value={CONTENT}
-          frameSize={SIZE}
-          contentCells={5}
-          content={<Text style={styles.icon}>👋</Text>}
-          contentStyle={styles.box}
-        />
-        <QrCodeSvg
-          style={styles.qr}
-          gradientColors={['#0800ff', '#ff0000']}
-          value={CONTENT}
-          frameSize={SIZE}
+          size={SIZE}
+          logo={{ source: <Text style={styles.icon}>👋</Text>, cells: 5, style: styles.box }}
         />
         <QrCodeSvg
           style={styles.qr}
           value={CONTENT}
-          frameSize={SIZE}
-          contentCells={5}
-          content={<Text style={styles.icon}>💻</Text>}
-          dotColor="#ffffff"
+          size={SIZE}
+          fill={{ type: 'gradient', colors: ['#0800ff', '#ff0000'] }}
+        />
+        <QrCodeSvg
+          style={styles.qr}
+          value={CONTENT}
+          size={SIZE}
+          logo={{ source: <Text style={styles.icon}>💻</Text>, cells: 5, style: styles.box }}
+          color="#ffffff"
           backgroundColor="#000000"
-          contentStyle={styles.box}
         />
-        <QrCodeSvg
-          style={styles.qr}
-          renderer={plainRenderer}
-          value={CONTENT}
-          frameSize={SIZE}
-        />
-        <QrCodeSvg
-          style={styles.qr}
-          renderer={customRenderer}
-          value={CONTENT}
-          frameSize={SIZE}
-        />
+        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="square" />
+        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape={customRenderer} />
       </View>
     </View>
   );
@@ -129,6 +150,27 @@ const styles = StyleSheet.create({
   },
 });
 ```
+
+## Upgrading to v2
+
+v2.0.0 is a full API redesign — every prop below was renamed, consolidated, or fixed:
+
+| v1                                                        | v2                                                              |
+|-------------------------------------------------------------|-------------------------------------------------------------------|
+| `frameSize`                                                 | `size`                                                             |
+| `dotColor`                                                   | `color`                                                            |
+| `content`, `contentCells`, `contentStyle`, `contentBackgroundRectProps` | `logo={{ source, cells, style, backgroundProps }}`     |
+| `gradientColors`, `gradientProps`                            | `fill={{ type: 'gradient', colors, ...linearGradientProps }}` (now supports 3+ colors) |
+| `figureCircleProps`, `figurePathProps`                        | `moduleProps`                                                      |
+| `renderer={defaultRenderer \| plainRenderer \| circleRenderer \| triangleRenderer}` | `shape="rounded" \| "square" \| "dots" \| "triangle"` |
+| `renderer={customRenderer}`                                   | `shape={customRenderer}`                                           |
+| `RenderParams.isSquareElem`                                   | `RenderParams.isFinderPattern`                                     |
+| `CustomRenderer.render[Kind.Circle \| Kind.Element]`           | `CustomRenderer.render.circle \| .path`                            |
+| `CustomRenderer.options.padding`                               | `CustomRenderer.options.gap`, or the top-level `gap` prop           |
+| —                                                              | `onError` (new, see above)                                          |
+| —                                                              | `ref` now forwards to the root `View`                                |
+
+Also fixed in v2: adjacent filled modules used to have a small persistent gap between them (visible as hairline cracks in solid blocks like the finder patterns) regardless of the shape's rounding — modules with a neighbor now sit flush against it.
 
 ## Contributing 🤝
 

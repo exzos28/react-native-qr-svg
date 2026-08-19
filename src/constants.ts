@@ -1,1 +1,1 @@
-export const DEFAULT_PADDING = 0.05;
+export const DEFAULT_GAP = 0.05;
