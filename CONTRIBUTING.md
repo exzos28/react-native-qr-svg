@@ -1,136 +1,85 @@
 # Contributing
 
-Contributions are always welcome, no matter how large or small!
+Contributions are always welcome, no matter how large or small. Please follow the [code of conduct](./CODE_OF_CONDUCT.md) in all your interactions with the project.
 
-We want this community to be friendly and respectful to each other. Please follow it in all your interactions with the project. Before contributing, please read the [code of conduct](./CODE_OF_CONDUCT.md).
+## Repository layout
 
-## Development workflow
+A [Yarn](https://yarnpkg.com/) workspaces monorepo, orchestrated with [Turborepo](https://turbo.build/):
 
-This project is a monorepo managed using [Yarn workspaces](https://yarnpkg.com/features/workspaces). It contains the following packages:
+| Path | What |
+| --- | --- |
+| `packages/react-native-qr-svg` | The library (published to npm) |
+| `apps/rn-cli-example` | Bare React Native app |
+| `apps/expo-example` | Expo app: Expo Go, development build and web |
+| `apps/docs` | Documentation site ([Docusaurus](https://docusaurus.io/)), deployed to GitHub Pages |
 
-- The library package in the root directory.
-- An example app in the `example/` directory.
+Both apps use the library from its TypeScript sources, so changes show up without a build step. Their `src/App.tsx` files are identical apart from the runtime label; keep them in sync.
 
-To get started with the project, make sure you have the correct version of [Node.js](https://nodejs.org/) installed. See the [`.nvmrc`](./.nvmrc) file for the version used in this project.
+## Setup
 
-Run `yarn` in the root directory to install the required dependencies for each package:
+Use the Node.js version from [`.nvmrc`](./.nvmrc), then:
 
 ```sh
 yarn
 ```
 
-> Since the project relies on Yarn workspaces, you cannot use [`npm`](https://github.com/npm/cli) for development without manually migrating.
-
-The [example app](/example/) demonstrates usage of the library. You need to run it to test any changes you make.
-
-It is configured to use the local version of the library, so any changes you make to the library's source code will be reflected in the example app. Changes to the library's JavaScript code will be reflected in the example app without a rebuild, but native code changes will require a rebuild of the example app.
-
-You can use various commands from the root directory to work with the project.
-
-To start the packager:
+## Library
 
 ```sh
-yarn example start
-```
-
-To run the example app on Android:
-
-```sh
-yarn example android
-```
-
-To run the example app on iOS:
-
-```sh
-yarn example ios
-```
-
-To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
-
-```sh
-Running "QrSvgExample" with {"fabric":true,"initialProps":{"concurrentRoot":true},"rootTag":1}
-```
-
-Note the `"fabric":true` and `"concurrentRoot":true` properties.
-
-To run the example app on Web:
-
-```sh
-yarn example web
-```
-
-Make sure your code passes TypeScript:
-
-```sh
-yarn typecheck
-```
-
-To check for linting errors, run the following:
-
-```sh
+yarn test        # unit, component and scan tests, and both apps' tests
 yarn lint
+yarn typecheck
+yarn build       # bob: lib/module + lib/typescript
 ```
 
-To fix formatting errors, run the following:
+How the library is put together (`packages/react-native-qr-svg/src`):
+
+- `encode.ts`: value → QR matrix (via [uqr](https://github.com/unjs/uqr)), with the kind of every module.
+- `contours.ts`: traces the outlines of connected dark modules; `paths.ts` turns them into SVG path data with rounded convex/concave corners and an inset.
+- `geometry.ts`: everything that gets drawn, in module units: modules, finder and alignment patterns, logo area, quiet zone.
+- `QrCodeSvg.tsx` draws the geometry with react-native-svg; `svgString.ts` turns it into an SVG document.
+
+### Scan tests
+
+`src/__tests__/scan.test.tsx` rasterizes codes with [resvg](https://github.com/yisibl/resvg-js) and decodes them with [jsQR](https://github.com/cozmo/jsQR). A code passes when it decodes at two of three resolutions (8, 10 and 12 pixels per module). A style that looks nice but doesn't scan must fail here, so add every new shape or option to these tests. The limits in `logoBudget.ts` and `MAX_RELIABLE_GAP` come from them.
+
+## Example apps
 
 ```sh
-yarn lint --fix
+yarn workspace expo-example start        # Expo Go / dev client
+yarn workspace expo-example web          # browser
+yarn workspace expo-example ios          # or: android (prebuild + build)
+
+yarn workspace rn-cli-example pods       # iOS: bundle install + pod install
+yarn workspace rn-cli-example start
+yarn workspace rn-cli-example ios        # or: android
 ```
 
-Remember to add tests for your change if possible. Run the unit tests by:
+## Documentation site
 
 ```sh
-yarn test
+yarn workspace docs start       # http://localhost:3000/react-native-qr-svg/
+yarn workspace docs build       # fails on broken links
 ```
 
+The previews and the playground render codes in the browser with the library's own `qrCodeToSvgString`. The API reference is generated from the TSDoc comments. The README images (`images/*.svg`) are generated too: run `yarn workspace docs readme-images` after changing how codes are drawn.
 
-### Commit message convention
+## Commit messages
 
-We follow the [conventional commits specification](https://www.conventionalcommits.org/en) for our commit messages:
+[Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`), checked by a commit hook.
 
-- `fix`: bug fixes, e.g. fix crash due to deprecated method.
-- `feat`: new features, e.g. add new method to the module.
-- `refactor`: code refactor, e.g. migrate from class components to hooks.
-- `docs`: changes into documentation, e.g. add usage example for the module.
-- `test`: adding or updating tests, e.g. add integration tests using detox.
-- `chore`: tooling changes, e.g. change CI config.
+## Releases
 
-Our pre-commit hooks verify that your commit message matches this format when committing.
-
-
-### Publishing to npm
-
-We use [release-it](https://github.com/release-it/release-it) to make it easier to publish new versions. It handles common tasks like bumping version based on semver, creating tags and releases etc.
-
-To publish new versions, run the following:
+Releases are managed with [Changesets](https://github.com/changesets/changesets). A pull request that changes the library adds a changeset:
 
 ```sh
-yarn release
+yarn changeset
 ```
 
+After merge, the [Release workflow](.github/workflows/release.yml) opens or updates a **"chore: version packages"** pull request that bumps the version and updates `CHANGELOG.md`. Merging that pull request publishes the package to npm and creates a GitHub release. Publishing uses [npm trusted publishing](https://docs.npmjs.com/trusted-publishers) (OIDC): there is no npm token secret; the package's trusted publisher on npmjs.com is this repository's `release.yml` workflow.
 
-### Scripts
+## Pull requests
 
-The `package.json` file contains various scripts for common tasks:
-
-- `yarn`: setup project by installing dependencies.
-- `yarn typecheck`: type-check files with TypeScript.
-  - `yarn lint`: lint files with [ESLint](https://eslint.org/).
-    - `yarn test`: run unit tests with [Jest](https://jestjs.io/).
-  - `yarn example start`: start the Metro server for the example app.
-- `yarn example android`: run the example app on Android.
-- `yarn example ios`: run the example app on iOS.
-  - `yarn example web`: run the example app on Web.
-- `yarn example build:web`: build the example app for Web.
-  
-### Sending a pull request
-
-> **Working on your first pull request?** You can learn how from this _free_ series: [How to Contribute to an Open Source Project on GitHub](https://app.egghead.io/playlists/how-to-contribute-to-an-open-source-project-on-github).
-
-When you're sending a pull request:
-
-- Prefer small pull requests focused on one change.
-- Verify that linters and tests are passing.
-- Review the documentation to make sure it looks good.
-- Follow the pull request template when opening a pull request.
-- For pull requests that change the API or implementation, discuss with maintainers first by opening an issue.
+- Keep pull requests small and focused on one change.
+- Make sure lint, typecheck and tests pass.
+- For changes to the API or the drawing, open an issue first to discuss it.

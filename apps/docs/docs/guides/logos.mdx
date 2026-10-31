@@ -1,0 +1,33 @@
+---
+sidebar_position: 2
+title: Logos
+---
+
+import QrPreview, { QrGallery } from '@site/src/components/QrPreview';
+
+# Logos
+
+```tsx
+<QrCodeSvg
+  value={url}
+  logo={{
+    source: <Image source={logoImage} style={{ width: '80%', height: '80%' }} />,
+    cells: 6, // side of the cleared area, in modules
+    style: { alignItems: 'center', justifyContent: 'center' },
+  }}
+/>
+```
+
+The modules behind the logo are cleared and a background-colored square is drawn there. The code still scans because error correction restores the hidden data, so:
+
+- **With a `logo`, the error correction level defaults to `H`** (instead of `M`). Pass `errorCorrectionLevel` to choose another one.
+- **In development you get a warning** when the logo hides more data than the level reliably restores. The limits come from the [scan tests](./scanning.md).
+
+<QrGallery>
+  <QrPreview value="Hello world!" logo="👋" width={170} caption="Short value, 6 modules" />
+  <QrPreview value="https://github.com/exzos28/react-native-qr-svg" logo="🚀" logoCells={12} width={170} caption="Longer value, 12 modules" />
+</QrGallery>
+
+Bigger codes have more room: a 12-module logo is fine for a URL, but would break `Hello world!`. If you need a bigger logo, use a longer value (such as a full URL) rather than a lower level.
+
+The level is also raised automatically whenever that fits into the same size, so you usually get more redundancy than you asked for at no cost.

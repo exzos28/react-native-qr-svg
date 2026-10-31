@@ -1,180 +1,66 @@
-# react-native-qr-svg 📱
+<div align="center">
+  <a href="https://exzos28.github.io/react-native-qr-svg/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="images/banner-dark.svg">
+      <img src="images/banner-light.svg" width="720" alt="react-native-qr-svg">
+    </picture>
+  </a>
 
-A QR Code generator for React Native based on react-native-svg. Effortlessly create QR codes with a style reminiscent of modern designs.
+  <p>
+    <a href="https://www.npmjs.com/package/react-native-qr-svg"><img src="https://img.shields.io/npm/v/react-native-qr-svg.svg?color=5b4cf0" alt="npm version"></a>
+    <a href="https://www.npmjs.com/package/react-native-qr-svg"><img src="https://img.shields.io/npm/dm/react-native-qr-svg.svg?color=5b4cf0" alt="npm downloads"></a>
+    <a href="https://github.com/exzos28/react-native-qr-svg/actions/workflows/ci.yml"><img src="https://github.com/exzos28/react-native-qr-svg/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/npm/l/react-native-qr-svg.svg?color=5b4cf0" alt="license"></a>
+  </p>
 
-[![Version](https://img.shields.io/npm/v/react-native-qr-svg.svg)](https://www.npmjs.com/package/react-native-qr-svg)
-[![NPM](https://img.shields.io/npm/dm/react-native-qr-svg.svg)](https://www.npmjs.com/package/react-native-qr-svg)
-## Installation 🚀
-Start by installing the necessary packages:
-```sh
-yarn add react-native-svg react-native-qr-svg
-```
+  <p>
+    <a href="https://exzos28.github.io/react-native-qr-svg/docs/intro"><b>Documentation</b></a> ·
+    <a href="https://exzos28.github.io/react-native-qr-svg/docs/playground"><b>Playground</b></a> ·
+    <a href="https://exzos28.github.io/react-native-qr-svg/docs/api"><b>API</b></a>
+  </p>
+</div>
 
-## Overview 🌟
+QR codes for React Native and the web, drawn with react-native-svg. Style them freely without giving up the one thing a QR code must do: scan.
 
-This library provides a straightforward way to generate QR codes within React Native applications. The QR codes produced have a modern aesthetic, perfect for various design contexts.
+- **Seamless shapes.** `rounded`, `liquid`, `square`, `dots` and `triangle`. Connected modules are traced as one outline: no hairline seams, half the path data.
+- **Custom eyes and colors.** Square, rounded or circle finder patterns in their own colors, gradients, gaps, quiet zone and logos.
+- **Scannable by default.** A test suite decodes every built-in style with a real QR decoder. The defaults keep finder patterns solid and raise error correction for logos, and development warnings catch logos or styles that may not scan.
+- **Lightweight.** Pure JavaScript with one small dependency: works in Expo Go and on the web.
+- **Not only React.** The same code renders to an SVG string for servers, sharing or saving to a file.
 
-## Customization 🎨
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="images/showcase-dark.svg">
+    <img src="images/showcase-light.svg" width="880" alt="QR codes in the rounded, liquid, square, dots, triangle, separated, gradient and logo styles">
+  </picture>
+  <br>
+  <sub>Real, scannable codes rendered by the library. <a href="https://exzos28.github.io/react-native-qr-svg/docs/playground">Try every option →</a></sub>
+</div>
 
-This library allows for easy customization of QR codes, enabling developers to adjust module color, gradient fill, shape, background color, size, and a logo overlay.
+## Getting started
 
-## Example 🖼️
+Install it in a bare React Native app or with Expo by following [Installation](https://exzos28.github.io/react-native-qr-svg/docs/installation), then style your first code in the [Playground](https://exzos28.github.io/react-native-qr-svg/docs/playground), which shows the props for every option you pick.
 
-<img src="screenshot/1.png" width="1027" alt='example'>
+## Documentation
 
-## Props
+| | |
+| --- | --- |
+| [Styling](https://exzos28.github.io/react-native-qr-svg/docs/guides/styling) | Shapes, gaps, eyes, colors and gradients, size and quiet zone |
+| [Logos](https://exzos28.github.io/react-native-qr-svg/docs/guides/logos) | Logos that still scan, and how big they can be |
+| [Scannability](https://exzos28.github.io/react-native-qr-svg/docs/guides/scanning) | What the scan tests check and what the defaults do for you |
+| [SVG without React](https://exzos28.github.io/react-native-qr-svg/docs/guides/svg-string) | `qrCodeToSvgString` and `encodeQr` for servers, sharing and other renderers |
+| [Custom renderer](https://exzos28.github.io/react-native-qr-svg/docs/guides/custom-renderer) | Draw every module yourself |
+| [Migrating to 2.1](https://exzos28.github.io/react-native-qr-svg/docs/migration) · [Troubleshooting](https://exzos28.github.io/react-native-qr-svg/docs/troubleshooting) | |
+| [API reference](https://exzos28.github.io/react-native-qr-svg/docs/api) | Every prop and function |
 
-| Property               | Description                                                                | Type                            | Default Value |
-|-------------------------|-----------------------------------------------------------------------------|----------------------------------|----------------|
-| `value`                 | The string to be converted into a QR code.                                 | `string`                         | (Required)     |
-| `size`                  | Explicit pixel size. Omit it to have the QR code fill its container's width and stay square via `aspectRatio: 1`. | `number` |  |
-| `errorCorrectionLevel`  | The error correction level for the QR code.                                | `'L' \| 'M' \| 'Q' \| 'H'`       | `'M'`          |
-| `backgroundColor`       | The background color of the QR code.                                       | `string`                         | `'#ffffff'`    |
-| `color`                 | The color of the QR code's modules.                                        | `string`                         | `'#000000'`    |
-| `fill`                  | Solid color or gradient fill for the modules. Overrides `color`.           | `ColorValue \| GradientFill`     |                |
-| `style`                 | Style for the container of the QR code.                                    | `StyleProp<ViewStyle>`           |                |
-| `shape`                 | Built-in shape preset, or a fully custom renderer.                         | `'rounded' \| 'square' \| 'dots' \| 'triangle' \| CustomRenderer` | `'rounded'`    |
-| `gap`                   | Gap between a module and its unconnected neighbors, as a fraction of one module (e.g. `0.01` = 1%). | `number` | shape-specific |
-| `separated`             | Apply `gap` between every module, including connected ones (a visible grid line), instead of only unconnected ones. | `boolean` | `false` |
-| `moduleProps`           | Props applied to the two underlying SVG paths that draw the modules.       | `PathProps`                      |                |
-| `logo`                  | Logo/content rendered in the middle of the QR code.                        | `LogoConfig`                     |                |
-| `testID`                | Base testID; sub-elements are suffixed (`-svg`, `-module`, `-content`).    | `string`                         | `'qr-code'`    |
-| `onError`               | Called instead of throwing on a generation failure. See below.             | `(error: Error) => void`         |                |
+## Example apps
 
-`GradientFill`:
+[`apps/rn-cli-example`](apps/rn-cli-example) (bare React Native) and [`apps/expo-example`](apps/expo-example) (Expo Go, development build and web) show the same interactive demo. See [CONTRIBUTING.md](CONTRIBUTING.md) to run them.
 
-| Property | Description                                    | Type              | Default Value |
-|----------|-------------------------------------------------|-------------------|----------------|
-| `type`   | Discriminant, always `'gradient'`.              | `'gradient'`      | (Required)     |
-| `colors` | 2 or more colors, distributed evenly.           | `ColorValue[]`     | (Required)     |
-| ...      | Any other `LinearGradientProps` (`x1`, `y1`, ...) from `react-native-svg`. |  |  |
+## Contributing
 
-`LogoConfig`:
-
-| Property          | Description                                              | Type                    | Default Value |
-|--------------------|-----------------------------------------------------------|--------------------------|----------------|
-| `source`           | Content rendered in the middle of the QR code.            | `React.ReactNode`        | (Required)     |
-| `cells`            | How many modules wide/tall the cleared area behind it is. | `number`                 | `6`            |
-| `style`            | Style for the logo's container.                           | `StyleProp<ViewStyle>`   |                |
-| `backgroundProps`  | Props for the SVG rect drawn behind the logo.              | `RectProps`              |                |
-
-### Responsive sizing
-
-`size` is optional. All module geometry is built in a matrix-unit coordinate space (one module = 1 unit) and rendered via the SVG's `viewBox`, so scaling to any pixel size is handled entirely by the renderer — no JS measurement involved. Without `size`, the root view uses `aspectRatio: 1` and fills its container's width:
-
-```tsx
-<View style={{ width: '100%' }}>
-  <QrCodeSvg value={value} />
-</View>
-```
-
-Give the container (or `style`) a width for this to have something to fill. Pass `size` when you want an explicit pixel size instead.
-
-Note `moduleProps` (e.g. `strokeWidth`) lives in that same matrix-unit space, so it scales with the rendered size rather than being a fixed pixel value.
-
-### Error handling
-
-By default, `QrCodeSvg` throws when it can't produce a QR code (for example, `value` is too long for the chosen `errorCorrectionLevel`) — in `__DEV__` this is an immediate crash so the problem is obvious during development; in production it falls back safely and warns via `console.warn` where possible.
-
-Pass `onError` to take over that behavior yourself instead — the component then never throws, in any environment, and calls `onError(error)` when generation fails:
-
-```tsx
-<QrCodeSvg
-  value={value}
-  size={200}
-  onError={(error) => reportToCrashlytics(error)}
-/>
-```
-
-## Example 🛠️
-
-Implement QR codes easily in your React Native app:
-
-[Full example use can find here.](./example/src/App.tsx)
-```tsx
-import React from 'react';
-
-import { StyleSheet, View, Text } from 'react-native';
-import { QrCodeSvg, renderCircle, renderSquare, type CustomRenderer, type RenderParams } from 'react-native-qr-svg';
-
-const SIZE = 140;
-const CONTENT = 'Hello world!';
-
-const render = ({ isFinderPattern, corners, cellSize }: RenderParams) =>
-  isFinderPattern ? renderSquare(corners) : renderCircle(corners.center, cellSize);
-
-const customRenderer: CustomRenderer = {
-  render: {
-    circle: render,
-    path: render,
-  },
-};
-
-export default function App() {
-  return (
-    <View style={styles.root}>
-      <View style={styles.row}>
-        <QrCodeSvg
-          style={styles.qr}
-          value={CONTENT}
-          size={SIZE}
-          logo={{ source: <Text style={styles.icon}>👋</Text>, cells: 5, style: styles.box }}
-        />
-        <QrCodeSvg
-          style={styles.qr}
-          value={CONTENT}
-          size={SIZE}
-          fill={{ type: 'gradient', colors: ['#0800ff', '#ff0000'] }}
-        />
-        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape="dots" />
-      </View>
-      <View style={styles.row}>
-        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} shape={customRenderer} />
-        <QrCodeSvg style={styles.qr} value={CONTENT} size={SIZE} separated />
-        {/* No `size` - fills the wrapper's width and stays square via aspectRatio. */}
-        <View style={[styles.qr, styles.responsive]}>
-          <QrCodeSvg value={CONTENT} />
-        </View>
-      </View>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    fontSize: 20,
-  },
-  qr: {
-    padding: 15,
-  },
-  responsive: {
-    width: SIZE,
-  },
-});
-```
-
-## Contributing 🤝
-
-Want to contribute? Check out the [contributing guide](CONTRIBUTING.md) to learn how you can be a part of this project's development.
+Issues and pull requests are welcome. [CONTRIBUTING.md](CONTRIBUTING.md) covers the monorepo, tests and releases.
 
 ## License
 
-This project is licensed under the MIT License.
-
----
-
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+[MIT](LICENSE)

@@ -1,0 +1,54 @@
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.figure {
+  margin: 0;
+  max-width: 100%;
+}
+
+.frame {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--qr-border);
+  background: #ffffff;
+  aspect-ratio: 1;
+}
+
+.svg,
+.svg svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.logo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  pointer-events: none;
+}
+
+.error {
+  padding: 1rem;
+  font-size: 0.85rem;
+  color: #b42318;
+}
+
+.caption {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-700);
+  text-align: center;
+}
+
+.caption code {
+  font-size: 0.8rem;
+}

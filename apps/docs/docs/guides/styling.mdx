@@ -1,0 +1,111 @@
+---
+sidebar_position: 1
+title: Styling
+---
+
+import QrPreview, { QrGallery } from '@site/src/components/QrPreview';
+
+export const URL = 'https://github.com/exzos28/react-native-qr-svg';
+
+# Styling
+
+## Shapes
+
+<QrGallery>
+  <QrPreview value={URL} width={170} caption={<code>rounded</code>} />
+  <QrPreview value={URL} width={170} shape="liquid" caption={<code>liquid</code>} />
+  <QrPreview value={URL} width={170} shape="square" caption={<code>square</code>} />
+  <QrPreview value={URL} width={170} shape="dots" caption={<code>dots</code>} />
+  <QrPreview value={URL} width={170} shape="triangle" caption={<code>triangle</code>} />
+</QrGallery>
+
+```tsx
+<QrCodeSvg value={url} shape="liquid" />
+```
+
+- `rounded` (default), `liquid` and `square` merge connected modules into one outline. `rounded` rounds the outer corners; `liquid` rounds the inner corners too.
+- `dots` and `triangle` draw every module on its own. Scanners locate a code by its finder and alignment patterns, which these shapes would break into pieces, so they are drawn solid by default (see [Eyes](#eyes)).
+
+## Gap
+
+`gap` insets the modules, as a fraction of one module. The shapes default to `0` (`square`) or `0.01`.
+
+<QrGallery>
+  <QrPreview value={URL} width={170} gap={0.12} caption={<code>gap={'{0.12}'}</code>} />
+  <QrPreview value={URL} width={170} shape="square" gap={0.12} separated caption={<code>gap + separated</code>} />
+  <QrPreview value={URL} width={170} shape="rounded" gap={0.25} separated caption={<code>gap={'{0.25}'} separated</code>} />
+</QrGallery>
+
+```tsx
+<QrCodeSvg value={url} gap={0.12} />
+<QrCodeSvg value={url} shape="square" gap={0.12} separated />
+```
+
+By default the gap only separates modules that don't touch. `separated` puts it between every two modules, and also makes the eyes solid.
+
+The gap never touches the finder and alignment patterns: they keep the exact 1:1:3:1:1 proportions scanners look for. That's why even large gaps scan; the [scan tests](./scanning.md) cover gaps up to `0.3`.
+
+## Eyes
+
+`finderPattern` draws the three finder patterns ("eyes") and the smaller alignment patterns as solid shapes, optionally in their own colors.
+
+<QrGallery>
+  <QrPreview value={URL} width={170} finderPattern={{ outer: 'square' }} caption={<code>square</code>} />
+  <QrPreview value={URL} width={170} finderPattern={{ outer: 'rounded' }} caption={<code>rounded</code>} />
+  <QrPreview value={URL} width={170} finderPattern={{ outer: 'circle' }} caption={<code>circle</code>} />
+  <QrPreview value={URL} width={170} shape="dots" finderPattern={{ outer: 'rounded', inner: 'circle', color: '#5b4cf0', innerColor: '#e0388c' }} caption={<code>colors</code>} />
+</QrGallery>
+
+```tsx
+<QrCodeSvg
+  value={url}
+  shape="dots"
+  finderPattern={{
+    outer: 'rounded', // 'square' | 'rounded' | 'circle'
+    inner: 'circle', // defaults to `outer`
+    color: '#5b4cf0', // defaults to the module fill
+    innerColor: '#e0388c', // defaults to `color`
+  }}
+/>
+```
+
+| `shape` | Default eyes |
+| --- | --- |
+| `rounded`, `liquid`, `square` | Drawn with the module shape |
+| `dots` | `circle` |
+| `triangle`, or `separated` | `square` |
+
+`finderPattern={false}` draws them with the module shape anyway.
+
+:::caution
+Combining `square` with `circle` (in either order) changes the proportions scanners check along the diagonal, and many scanners can't find such eyes. `rounded` goes with both. In development the component warns about it.
+:::
+
+## Colors and gradients
+
+```tsx
+<QrCodeSvg value={url} color="#17172b" backgroundColor="#f4f4f8" />
+
+<QrCodeSvg
+  value={url}
+  fill={{ type: 'gradient', colors: ['#5b4cf0', '#e0388c'] }} // x1/y1/x2/y2 too
+/>
+```
+
+Keep the contrast high: dark modules on a light background. Inverted codes (light on dark) aren't read by every scanner.
+
+## Size and quiet zone
+
+Without `size`, the code fills its container's width and stays square:
+
+```tsx
+<View style={{ width: '60%' }}>
+  <QrCodeSvg value={url} />
+</View>
+```
+
+`quietZone` adds a light margin, in modules. Scanners expect 4. Leave it at `0` when the surroundings are already light and empty, or add `padding` to `style`.
+
+```tsx
+<QrCodeSvg value={url} size={240} quietZone={4} />
+```

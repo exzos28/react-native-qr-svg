@@ -1,0 +1,118 @@
+{
+  "name": "react-native-qr-svg",
+  "version": "2.0.0",
+  "description": "Stylish, scannable QR codes for React Native and the web, rendered with react-native-svg.",
+  "main": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "react-native-qr-svg-source": "./src/index.ts",
+      "types": "./lib/typescript/src/index.d.ts",
+      "default": "./lib/module/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "bob build",
+    "prepare": "bob build",
+    "prepack": "node ./scripts/copy-root-docs.mjs",
+    "typecheck": "tsc",
+    "test": "jest",
+    "clean": "del-cli lib"
+  },
+  "keywords": [
+    "react-native",
+    "qr",
+    "qr-code",
+    "qrcode",
+    "svg",
+    "react-native-svg",
+    "expo",
+    "ios",
+    "android",
+    "web"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exzos28/react-native-qr-svg.git",
+    "directory": "packages/react-native-qr-svg"
+  },
+  "author": "exzos28 <oleksandr.kurinnyi.dev@gmail.com> (https://github.com/exzos28)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/exzos28/react-native-qr-svg/issues"
+  },
+  "homepage": "https://exzos28.github.io/react-native-qr-svg/",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-svg": "*"
+  },
+  "devDependencies": {
+    "@react-native/babel-preset": "0.88.1",
+    "@react-native/jest-preset": "0.88.1",
+    "@resvg/resvg-js": "^2.6.2",
+    "@testing-library/react-native": "^14.0.1",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^19.2.0",
+    "del-cli": "^8.0.1",
+    "jest": "^29.7.0",
+    "jsqr": "^1.4.0",
+    "react": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-builder-bob": "^0.44.1",
+    "react-native-svg": "^15.16.0",
+    "test-renderer": "^1.2.0",
+    "typescript": "^6.0.3"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  },
+  "jest": {
+    "preset": "@react-native/jest-preset",
+    "testEnvironmentOptions": {
+      "customExportConditions": [
+        "require",
+        "react-native",
+        "react-native-qr-svg-source"
+      ]
+    },
+    "modulePathIgnorePatterns": [
+      "<rootDir>/lib/"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.test.{ts,tsx}"
+    ]
+  },
+  "dependencies": {
+    "uqr": "^0.1.3"
+  }
+}

@@ -1,0 +1,35 @@
+---
+sidebar_position: 1
+title: Introduction
+slug: /intro
+---
+
+import QrPreview, { QrGallery } from '@site/src/components/QrPreview';
+
+# react-native-qr-svg
+
+QR codes for React Native and the web, drawn with [react-native-svg](https://github.com/software-mansion/react-native-svg). Style them freely (shapes, gradients, custom eyes, logos) without giving up the one thing a QR code must do: scan.
+
+<QrGallery>
+  <QrPreview value="https://github.com/exzos28/react-native-qr-svg" caption={<code>rounded</code>} />
+  <QrPreview value="https://github.com/exzos28/react-native-qr-svg" shape="liquid" color={{ type: 'gradient', colors: ['#5b4cf0', '#e0388c'] }} finderPattern={{ outer: 'circle' }} caption={<code>liquid + gradient</code>} />
+  <QrPreview value="https://github.com/exzos28/react-native-qr-svg" shape="dots" finderPattern={{ outer: 'rounded', inner: 'circle', color: '#5b4cf0', innerColor: '#e0388c' }} caption={<code>dots + colored eyes</code>} />
+  <QrPreview value="https://github.com/exzos28/react-native-qr-svg" logo="👋" caption={<code>logo</code>} />
+</QrGallery>
+
+Every picture on this site is rendered in your browser by the library's own geometry code.
+
+```tsx
+import { QrCodeSvg } from 'react-native-qr-svg';
+
+<QrCodeSvg value="https://example.com" size={200} />;
+```
+
+## Why this library
+
+- **Seamless shapes.** Connected modules are merged into one outline, so there are no hairline seams between modules at any zoom level, and `liquid` can round inner corners too.
+- **Scannable by default.** Shapes whose modules don't touch get solid finder and alignment patterns, a logo raises error correction to `H`, and in development you get a warning when a logo or gap is too large. A test suite decodes every built-in style with a real QR decoder.
+- **Lightweight.** One small dependency ([uqr](https://github.com/unjs/uqr), no transitive dependencies). Pure JavaScript, so it works in Expo Go and on the web.
+- **Not only React.** [`qrCodeToSvgString`](./guides/svg-string.md) renders the same code to an SVG string: for the web, a server, sharing or saving to a file.
+
+Next: [install it](./installation.md), or try every option in the [playground](./playground.mdx).
