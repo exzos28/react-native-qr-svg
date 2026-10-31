@@ -1,0 +1,48 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    # Never publish from forks.
+    if: github.repository == 'exzos28/react-native-qr-svg'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build packages
+        run: yarn turbo run build --filter='./packages/*'
+
+      # On every push to main this either opens/updates the "Version Packages"
+      # PR (when there are pending changesets) or, once that PR is merged,
+      # publishes the new version to npm and creates a GitHub release.
+      - name: Create release pull request or publish
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          version-script: yarn changeset version
+          publish-script: yarn changeset publish
+          pr-title: 'chore: version packages'
+          commit-message: 'chore: version packages'
+          create-github-releases: true
+        # npm trusted publishing: `yarn npm publish` exchanges this job's
+        # OIDC token (id-token: write) for a short-lived npm token, so there
+        # is no NPM_TOKEN secret. The package's trusted publisher on npmjs.com
+        # must point at this repository and this workflow file (release.yml).
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          YARN_NPM_PUBLISH_PROVENANCE: true
