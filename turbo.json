@@ -8,7 +8,8 @@
       "outputs": ["lib/**"]
     },
     "typecheck": {
-      "outputs": []
+      "outputs": [],
+      "dependsOn": ["^build"]
     },
     "test": {
       "outputs": ["coverage/**"]
