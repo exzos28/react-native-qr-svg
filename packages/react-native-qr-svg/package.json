@@ -1,6 +1,6 @@
 {
   "name": "react-native-qr-svg",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Stylish, scannable QR codes for React Native and the web, rendered with react-native-svg.",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
