@@ -54,6 +54,7 @@ export default defineConfig([
       '**/node_modules/**',
       '**/lib/**',
       '**/coverage/**',
+      '**/dist/**',
       '**/.expo/**',
       'apps/*/ios/**',
       'apps/*/android/**',
